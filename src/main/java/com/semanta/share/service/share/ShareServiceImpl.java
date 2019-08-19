@@ -12,12 +12,12 @@ public class ShareServiceImpl implements ShareService {
     private final String WRk_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
 
     public String makeTmpDir() {
-        String dirName = concatDirs(this.genNounce());
+        String dirName = concatDirs(this.genNonce());
         new File(dirName).mkdirs();
         return dirName;
     }
 
-    private String genNounce() {
+    private String genNonce() {
         return UUID.randomUUID().toString();
     }
 
