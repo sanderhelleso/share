@@ -1,6 +1,7 @@
 package com.semanta.share.controller;
 
 import com.semanta.share.service.share.ShareServiceImpl;
+import com.semanta.share.utils.DelDirTask;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,8 @@ public class ShareController {
 
     @PostMapping("/upload")
     public String upload() {
-        return shareService.makeTmpDir();
+        String dirName = shareService.makeTmpDir();
+        new DelDirTask(5000, dirName);
+        return dirName;
     }
 }
