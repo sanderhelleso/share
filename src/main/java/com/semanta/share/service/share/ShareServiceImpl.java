@@ -1,11 +1,14 @@
 package com.semanta.share.service.share;
 
 import java.io.File;
+import java.net.URLConnection;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+
+import com.semanta.share.model.FileInfo;
 import com.semanta.share.utils.DelDirTask;
 
 @Service
@@ -25,15 +28,20 @@ public class ShareServiceImpl implements ShareService {
         return dirNonce;
     }
 
-    public ArrayList<String> retrieve(String dirNonce) {
+    public ArrayList<FileInfo> retrieve(String dirNonce) {
         File dir = new File(concatDirs(dirNonce));
         if (!dir.isDirectory()) {
             // throw new Exception("Directory has expired or might have never existed");
         }
 
-        ArrayList<String> files = new ArrayList<String>();
+        ArrayList<FileInfo> files = new ArrayList<FileInfo>();
         for (File file : dir.listFiles()) {
-            files.add(file.getName());
+            String name = file.getName();
+            String dlPath = file.getPath();
+            String type = this.getMimeType(file);
+            long size = this.getSize(file);
+
+            files.add(new FileInfo(name, type, dlPath, size));
         }
 
         return files;
@@ -49,6 +57,28 @@ public class ShareServiceImpl implements ShareService {
 
     private String genNonce() {
         return UUID.randomUUID().toString();
+    }
+
+    private String getMimeType(File file) {
+        if (file.isDirectory()) {
+            return "folder";
+        }
+
+        return URLConnection.guessContentTypeFromName(file.getName());
+    }
+
+    private long getSize(File dir) {
+        long sum = 0;
+
+        if (dir.isDirectory()) {
+            for (File file : dir.listFiles()) {
+                sum += getSize(file);
+            }
+        } else {
+            sum = dir.length();
+        }
+
+        return sum;
     }
 
     private String concatDirs(String s) {
