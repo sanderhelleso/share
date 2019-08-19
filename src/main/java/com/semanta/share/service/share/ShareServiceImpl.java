@@ -2,6 +2,7 @@ package com.semanta.share.service.share;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -22,6 +23,20 @@ public class ShareServiceImpl implements ShareService {
 
         new DelDirTask(timeout, concatDirs(dirNonce));
         return dirNonce;
+    }
+
+    public ArrayList<String> retrieve(String dirNonce) {
+        File dir = new File(concatDirs(dirNonce));
+        if (!dir.isDirectory()) {
+            // throw new Exception("Directory has expired or might have never existed");
+        }
+
+        ArrayList<String> files = new ArrayList<String>();
+        for (File file : dir.listFiles()) {
+            files.add(file.getName());
+        }
+
+        return files;
     }
 
     private String makeTmpDir() {
