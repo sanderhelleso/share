@@ -5,16 +5,31 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import com.semanta.share.utils.DelDirTask;
 
 @Service
 public class ShareServiceImpl implements ShareService {
+    private final int MAX_AGE = 172800000; // 2 days
     private final String SHARE_DIR = "tmp-dirs";
     private final String WRk_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
 
-    public String makeTmpDir() {
-        String dirName = concatDirs(this.genNonce());
+    public String upload(String delOnFirstView, int timeout) {
+        String dirNonce = this.makeTmpDir();
+
+        if (delOnFirstView == "1") {
+            timeout = MAX_AGE;
+        }
+
+        new DelDirTask(timeout, concatDirs(dirNonce));
+        return dirNonce;
+    }
+
+    private String makeTmpDir() {
+        String nonce = this.genNonce();
+        String dirName = concatDirs(nonce);
+
         new File(dirName).mkdirs();
-        return dirName;
+        return nonce;
     }
 
     private String genNonce() {
