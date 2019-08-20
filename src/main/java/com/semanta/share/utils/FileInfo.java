@@ -1,4 +1,4 @@
-package com.semanta.share.model;
+package com.semanta.share.utils;
 
 public class FileInfo {
     private String name;
