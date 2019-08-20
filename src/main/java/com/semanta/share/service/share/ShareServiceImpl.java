@@ -29,16 +29,16 @@ public class ShareServiceImpl implements ShareService {
 
     @Override
     public String upload(String delOnFirstView, long timeout) {
-        String dirNonce = this.makeTmpDir();
+        String dirID = this.makeTmpDir();
 
-        this.saveShareInfo(dirNonce, delOnFirstView == "1", timeout);
-        new DelDirTask(timeout, concatDirs(dirNonce));
-        return dirNonce;
+        this.saveShareInfo(dirID, delOnFirstView == "1", timeout);
+        new DelDirTask(timeout, concatDirs(dirID));
+        return dirID;
     }
 
     @Override
-    public List<FileInfo> retrieve(String dirNonce) {
-        Optional<ShareInfo> shareInfoOpt = shareInfoRepository.findById(dirNonce);
+    public List<FileInfo> retrieve(String dirID) {
+        Optional<ShareInfo> shareInfoOpt = shareInfoRepository.findById(dirID);
 
         try {
             shareInfoOpt.orElseThrow(() -> new Exception("Directory has expired or might have never existed"));
@@ -48,7 +48,7 @@ public class ShareServiceImpl implements ShareService {
 
         this.updateShareInfo(shareInfoOpt);
 
-        File dir = new File(concatDirs(dirNonce));
+        File dir = new File(concatDirs(dirID));
         ArrayList<FileInfo> files = new ArrayList<FileInfo>();
 
         for (File file : dir.listFiles()) {
@@ -68,7 +68,7 @@ public class ShareServiceImpl implements ShareService {
         return shareInfoRepository.findAll();
     }
 
-    private void saveShareInfo(String dirNonce, Boolean delOnFirstView, Long timeout) {
+    private void saveShareInfo(String dirID, Boolean delOnFirstView, Long timeout) {
         if (delOnFirstView) {
             timeout = Long.valueOf(MAX_AGE);
         }
@@ -76,7 +76,7 @@ public class ShareServiceImpl implements ShareService {
         Date now = new Date();
         Date expiresAt = new Date(now.getTime() + timeout);
 
-        ShareInfo shareInfo = new ShareInfo(dirNonce, expiresAt, delOnFirstView, "Norway");
+        ShareInfo shareInfo = new ShareInfo(dirID, expiresAt, delOnFirstView, "Norway");
         shareInfoRepository.save(shareInfo);
     }
 
@@ -88,15 +88,11 @@ public class ShareServiceImpl implements ShareService {
     }
 
     private String makeTmpDir() {
-        String nonce = this.genNonce();
-        String dirName = concatDirs(nonce);
+        String hash = UUID.randomUUID().toString();
+        String dirName = concatDirs(hash);
 
         new File(dirName).mkdirs();
-        return nonce;
-    }
-
-    private String genNonce() {
-        return UUID.randomUUID().toString();
+        return hash;
     }
 
     private String getMimeType(File file) {

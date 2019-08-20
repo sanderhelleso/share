@@ -25,8 +25,8 @@ public class ShareController {
     }
 
     @GetMapping("/retrieve")
-    public List<FileInfo> retrieve(@RequestParam String dirNonce) {
-        return shareService.retrieve(dirNonce);
+    public List<FileInfo> retrieve(@RequestParam String dirID) {
+        return shareService.retrieve(dirID);
     }
 
     @GetMapping("/retrieve_info_debugg")
