@@ -5,6 +5,7 @@ import java.net.URLConnection;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,8 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.semanta.share.model.FileInfo;
+import com.semanta.share.utils.FileInfo;
+import com.semanta.share.model.ShareAccessedFrom;
 import com.semanta.share.model.ShareInfo;
+import com.semanta.share.repository.ShareAccessedFromRepository;
 import com.semanta.share.repository.ShareInfoRepository;
 import com.semanta.share.utils.DelDirTask;
 import com.semanta.share.utils.LookupIP;
@@ -24,7 +27,7 @@ import com.semanta.share.utils.LookupIP;
 public class ShareServiceImpl implements ShareService {
 
     @Autowired
-    private ShareInfoRepository shareInfoRepository;
+    private ShareInfoRepository shareInfoRepo;
 
     private final int MAX_AGE = 172800000; // 2 days
     private final String SHARE_DIR = "tmp-dirs";
@@ -41,8 +44,8 @@ public class ShareServiceImpl implements ShareService {
     }
 
     @Override
-    public List<FileInfo> retrieve(String dirID) {
-        Optional<ShareInfo> shareInfoOpt = shareInfoRepository.findById(dirID);
+    public List<FileInfo> retrieve(String dirID, HttpServletRequest request) {
+        Optional<ShareInfo> shareInfoOpt = shareInfoRepo.findById(dirID);
 
         try {
             shareInfoOpt.orElseThrow(() -> new Exception("Directory has expired or might have never existed"));
@@ -50,7 +53,7 @@ public class ShareServiceImpl implements ShareService {
             e.printStackTrace();
         }
 
-        this.updateShareInfo(shareInfoOpt);
+        this.updateShareInfo(shareInfoOpt, request);
 
         File dir = new File(concatDirs(dirID));
         ArrayList<FileInfo> files = new ArrayList<FileInfo>();
@@ -69,7 +72,7 @@ public class ShareServiceImpl implements ShareService {
 
     @Override
     public List<ShareInfo> retrieveAll() {
-        return shareInfoRepository.findAll();
+        return shareInfoRepo.findAll();
     }
 
     private void saveShareInfo(String dirID, Boolean delOnFirstView, Long timeout, String country) {
@@ -81,14 +84,17 @@ public class ShareServiceImpl implements ShareService {
         Date expiresAt = new Date(now.getTime() + timeout);
 
         ShareInfo shareInfo = new ShareInfo(dirID, expiresAt, delOnFirstView, country);
-        shareInfoRepository.save(shareInfo);
+        shareInfoRepo.save(shareInfo);
     }
 
-    private void updateShareInfo(Optional<ShareInfo> shareInfoOpt) {
+    private void updateShareInfo(Optional<ShareInfo> shareInfoOpt, HttpServletRequest request) {
+        String country = LookupIP.lookup(request.getRemoteAddr());
+
         ShareInfo shareInfo = shareInfoOpt.get();
         shareInfo.setLastDownloadedAt();
         shareInfo.setTotDownloads();
-        shareInfoRepository.save(shareInfo);
+        shareInfo.addShareAccessedFrom(country);
+        shareInfoRepo.save(shareInfo);
     }
 
     private String makeTmpDir() {

@@ -1,6 +1,9 @@
 package com.semanta.share.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,6 +19,7 @@ public class ShareInfo {
     private Date expiresAt;
     private Boolean delOnFirstView;
     private String sharedFromCountry;
+    private HashMap<String, Integer> shareAccessedFrom;
 
     public ShareInfo() {
         // for repo
@@ -28,6 +32,7 @@ public class ShareInfo {
         this.expiresAt = expiresAt;
         this.delOnFirstView = delOnFirstView;
         this.sharedFromCountry = sharedFromCountry;
+        this.shareAccessedFrom = new HashMap<String, Integer>();
     };
 
     public void setTotDownloads() {
@@ -36,6 +41,19 @@ public class ShareInfo {
 
     public void setLastDownloadedAt() {
         this.lastDownloadedAt = new Date();
+    }
+
+    public void addShareAccessedFrom(String country) {
+        int count = 0;
+        if (this.shareAccessedFrom.containsKey(country)) {
+            count = this.shareAccessedFrom.get(country);
+        }
+
+        this.shareAccessedFrom.put(country, count + 1);
+    }
+
+    public String getId() {
+        return this.id;
     }
 
     public int getTotalDownloads() {
@@ -50,11 +68,15 @@ public class ShareInfo {
         return this.expiresAt;
     }
 
-    public Boolean getdelOnFirstView() {
+    public Boolean getDelOnFirstView() {
         return this.delOnFirstView;
     }
 
     public String getSharedFromCountry() {
         return this.sharedFromCountry;
+    }
+
+    public HashMap<String, Integer> getShareAccessedFrom() {
+        return this.shareAccessedFrom;
     }
 }
