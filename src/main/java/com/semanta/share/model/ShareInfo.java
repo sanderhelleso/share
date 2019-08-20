@@ -1,24 +1,38 @@
 package com.semanta.share.model;
 
 import java.util.Date;
-import java.util.HashMap;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "share_info")
 public class ShareInfo {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private String id;
+
     private int totDownloads;
     private Date lastDownloadedAt;
     private Date expiresAt;
-    private Boolean delOnEnter;
+    private Boolean delOnFirstView;
     private String sharedFromCountry;
-    private HashMap<String, Integer> countryDownloads = new HashMap<String, Integer>();
 
-    public ShareInfo(int totDownloads, Date lastDownloadedAt, Date expiresAt, Boolean delOnEnter,
-            String sharedFromCountry, HashMap<String, Integer> countryDownloads) {
+    public ShareInfo() {
+        // for repo
+    };
+
+    public ShareInfo(int totDownloads, Date lastDownloadedAt, Date expiresAt, Boolean delOnFirstView,
+            String sharedFromCountry) {
         this.totDownloads = totDownloads;
         this.lastDownloadedAt = lastDownloadedAt;
         this.expiresAt = expiresAt;
-        this.delOnEnter = delOnEnter;
+        this.delOnFirstView = delOnFirstView;
         this.sharedFromCountry = sharedFromCountry;
-        this.countryDownloads = countryDownloads;
     }
 
     public int getTotalDownloads() {
@@ -33,15 +47,11 @@ public class ShareInfo {
         return this.expiresAt;
     }
 
-    public Boolean getDelOnEnter() {
-        return this.delOnEnter;
+    public Boolean getdelOnFirstView() {
+        return this.delOnFirstView;
     }
 
     public String getSharedFromCountry() {
         return this.sharedFromCountry;
-    }
-
-    public HashMap<String, Integer> getCountryDownloads() {
-        return this.countryDownloads;
     }
 }
