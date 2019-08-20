@@ -30,15 +30,7 @@ public class ShareServiceImpl implements ShareService {
     public String upload(String delOnFirstView, long timeout) {
         String dirNonce = this.makeTmpDir();
 
-        Date now = new Date();
-
-        if (delOnFirstView == "1") {
-            timeout = MAX_AGE;
-        }
-
-        ShareInfo shareInfo = new ShareInfo(0, now, new Date(now.getTime() + timeout), delOnFirstView == "1", "Norway");
-        shareInfoRepository.save(shareInfo);
-
+        this.saveShareInfo(dirNonce, delOnFirstView == "1", timeout);
         new DelDirTask(timeout, concatDirs(dirNonce));
         return dirNonce;
     }
@@ -66,6 +58,18 @@ public class ShareServiceImpl implements ShareService {
     @Override
     public List<ShareInfo> retrieveAll() {
         return shareInfoRepository.findAll();
+    }
+
+    private void saveShareInfo(String dirNonce, Boolean delOnFirstView, Long timeout) {
+        if (delOnFirstView) {
+            timeout = Long.valueOf(MAX_AGE);
+        }
+
+        Date now = new Date();
+        Date expiresAt = new Date(now.getTime() + timeout);
+
+        ShareInfo shareInfo = new ShareInfo(dirNonce, expiresAt, delOnFirstView, "Norway");
+        shareInfoRepository.save(shareInfo);
     }
 
     private String makeTmpDir() {
