@@ -25,11 +25,11 @@ public class ShareController {
 
     @GetMapping("/retrieve")
     public ArrayList<FileInfo> retrieve(@RequestParam String dirNonce) {
-        return this.shareService.retrieve(dirNonce);
+        return shareService.retrieve(dirNonce);
     }
 
     @PostMapping("/upload")
     public String upload(@RequestParam String delOnFirstView, int timeout) {
-        return this.shareService.upload(delOnFirstView, timeout);
+        return shareService.upload(delOnFirstView, timeout);
     }
 }
