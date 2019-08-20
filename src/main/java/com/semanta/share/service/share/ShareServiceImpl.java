@@ -6,7 +6,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import com.semanta.share.model.FileInfo;
 import com.semanta.share.model.ShareInfo;
 import com.semanta.share.repository.ShareInfoRepository;
 import com.semanta.share.utils.DelDirTask;
+import com.semanta.share.utils.LookupIP;
 
 @Service
 public class ShareServiceImpl implements ShareService {
@@ -27,30 +31,30 @@ public class ShareServiceImpl implements ShareService {
     private final String WRk_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
 
     @Override
-    public String upload(String delOnFirstView, long timeout) {
-        String dirNonce = this.makeTmpDir();
+    public String upload(String delOnFirstView, long timeout, HttpServletRequest request) {
+        String dirID = this.makeTmpDir();
 
-        Date now = new Date();
-
-        if (delOnFirstView == "1") {
-            timeout = MAX_AGE;
-        }
-
-        ShareInfo shareInfo = new ShareInfo(0, now, new Date(now.getTime() + timeout), delOnFirstView == "1", "Norway");
-        shareInfoRepository.save(shareInfo);
-
-        new DelDirTask(timeout, concatDirs(dirNonce));
-        return dirNonce;
+        String country = LookupIP.lookup(request.getRemoteAddr());
+        this.saveShareInfo(dirID, delOnFirstView == "1", timeout, country);
+        new DelDirTask(timeout, concatDirs(dirID));
+        return dirID;
     }
 
     @Override
-    public List<FileInfo> retrieve(String dirNonce) {
-        File dir = new File(concatDirs(dirNonce));
-        if (!dir.isDirectory()) {
-            // throw new Exception("Directory has expired or might have never existed");
+    public List<FileInfo> retrieve(String dirID) {
+        Optional<ShareInfo> shareInfoOpt = shareInfoRepository.findById(dirID);
+
+        try {
+            shareInfoOpt.orElseThrow(() -> new Exception("Directory has expired or might have never existed"));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+        this.updateShareInfo(shareInfoOpt);
+
+        File dir = new File(concatDirs(dirID));
         ArrayList<FileInfo> files = new ArrayList<FileInfo>();
+
         for (File file : dir.listFiles()) {
             String name = file.getName();
             String dlPath = file.getPath();
@@ -68,16 +72,31 @@ public class ShareServiceImpl implements ShareService {
         return shareInfoRepository.findAll();
     }
 
-    private String makeTmpDir() {
-        String nonce = this.genNonce();
-        String dirName = concatDirs(nonce);
+    private void saveShareInfo(String dirID, Boolean delOnFirstView, Long timeout, String country) {
+        if (delOnFirstView) {
+            timeout = Long.valueOf(MAX_AGE);
+        }
 
-        new File(dirName).mkdirs();
-        return nonce;
+        Date now = new Date();
+        Date expiresAt = new Date(now.getTime() + timeout);
+
+        ShareInfo shareInfo = new ShareInfo(dirID, expiresAt, delOnFirstView, country);
+        shareInfoRepository.save(shareInfo);
     }
 
-    private String genNonce() {
-        return UUID.randomUUID().toString();
+    private void updateShareInfo(Optional<ShareInfo> shareInfoOpt) {
+        ShareInfo shareInfo = shareInfoOpt.get();
+        shareInfo.setLastDownloadedAt();
+        shareInfo.setTotDownloads();
+        shareInfoRepository.save(shareInfo);
+    }
+
+    private String makeTmpDir() {
+        String hash = UUID.randomUUID().toString();
+        String dirName = concatDirs(hash);
+
+        new File(dirName).mkdirs();
+        return hash;
     }
 
     private String getMimeType(File file) {
