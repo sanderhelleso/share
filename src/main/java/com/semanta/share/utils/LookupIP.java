@@ -7,13 +7,17 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import com.semanta.share.config.Config;
 
 public class LookupIP {
 
-    public static ArrayList<String> lookup(String ip) {
+    public static String lookup(String ip) {
+        if (ip.equals("0:0:0:0:0:0:0:1")) {
+            return "Norway, NO"; // local ip
+        }
 
-        String apiKey = "";
-        String urlString = "https://api.ipdata.co/" + ip + "?api-key=" + apiKey;
+        String apiKey = "?api-key=" + Config.IPDATA_API_KEY;
+        String urlString = "https://api.ipdata.co/" + ip + apiKey;
         String res = null;
 
         try {
@@ -42,7 +46,7 @@ public class LookupIP {
         return res;
     }
 
-    private static ArrayList<String> extractCountryAndCode(String res) {
+    private static String extractCountryAndCode(String res) {
         ArrayList<String> results = new ArrayList<String>();
         String[] lines = res.split("\n");
 
@@ -70,7 +74,7 @@ public class LookupIP {
             }
         }
 
-        return results;
+        return results.get(0) + ", " + results.get(1);
     }
 
     private static String clean(String s) {

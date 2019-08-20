@@ -5,8 +5,10 @@ import com.semanta.share.model.ShareInfo;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface ShareService {
-    public abstract String upload(String delOnFirstView, long timeout);
+    public abstract String upload(String delOnFirstView, long timeout, HttpServletRequest request);
 
     public abstract List<FileInfo> retrieve(String dirID);
 

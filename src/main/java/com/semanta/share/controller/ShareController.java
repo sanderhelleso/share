@@ -7,6 +7,8 @@ import com.semanta.share.service.share.ShareServiceImpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,14 +24,9 @@ public class ShareController {
     @Autowired
     private ShareServiceImpl shareService;
 
-    @GetMapping("/health")
-    public String checkHealth() {
-        return "OK";
-    }
-
     @GetMapping("/ip_test")
-    public ArrayList<String> ipTest() {
-        return LookupIP.lookup("8.8.8.8");
+    public String ipTest(HttpServletRequest request) {
+        return request.getRemoteAddr();
     }
 
     @GetMapping("/retrieve_info_debugg")
@@ -43,7 +40,7 @@ public class ShareController {
     }
 
     @PostMapping("/upload")
-    public String upload(@RequestParam String delOnFirstView, int timeout) {
-        return shareService.upload(delOnFirstView, timeout);
+    public String upload(@RequestParam String delOnFirstView, int timeout, HttpServletRequest request) {
+        return shareService.upload(delOnFirstView, timeout, request);
     }
 }

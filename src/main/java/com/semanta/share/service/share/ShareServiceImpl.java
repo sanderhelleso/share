@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import com.semanta.share.model.FileInfo;
 import com.semanta.share.model.ShareInfo;
 import com.semanta.share.repository.ShareInfoRepository;
 import com.semanta.share.utils.DelDirTask;
+import com.semanta.share.utils.LookupIP;
 
 @Service
 public class ShareServiceImpl implements ShareService {
@@ -28,10 +31,11 @@ public class ShareServiceImpl implements ShareService {
     private final String WRk_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
 
     @Override
-    public String upload(String delOnFirstView, long timeout) {
+    public String upload(String delOnFirstView, long timeout, HttpServletRequest request) {
         String dirID = this.makeTmpDir();
 
-        this.saveShareInfo(dirID, delOnFirstView == "1", timeout);
+        String country = LookupIP.lookup(request.getRemoteAddr());
+        this.saveShareInfo(dirID, delOnFirstView == "1", timeout, country);
         new DelDirTask(timeout, concatDirs(dirID));
         return dirID;
     }
@@ -68,7 +72,7 @@ public class ShareServiceImpl implements ShareService {
         return shareInfoRepository.findAll();
     }
 
-    private void saveShareInfo(String dirID, Boolean delOnFirstView, Long timeout) {
+    private void saveShareInfo(String dirID, Boolean delOnFirstView, Long timeout, String country) {
         if (delOnFirstView) {
             timeout = Long.valueOf(MAX_AGE);
         }
@@ -76,7 +80,7 @@ public class ShareServiceImpl implements ShareService {
         Date now = new Date();
         Date expiresAt = new Date(now.getTime() + timeout);
 
-        ShareInfo shareInfo = new ShareInfo(dirID, expiresAt, delOnFirstView, "Norway");
+        ShareInfo shareInfo = new ShareInfo(dirID, expiresAt, delOnFirstView, country);
         shareInfoRepository.save(shareInfo);
     }
 
