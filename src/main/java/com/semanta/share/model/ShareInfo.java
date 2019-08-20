@@ -3,7 +3,17 @@ package com.semanta.share.model;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class ShareInfo {
+
+    @Id
+    @GeneratedValue
+    private int id;
+
     private int totDownloads;
     private Date lastDownloadedAt;
     private Date expiresAt;
