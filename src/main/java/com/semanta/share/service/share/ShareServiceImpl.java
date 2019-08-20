@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.semanta.share.utils.FileInfo;
-import com.semanta.share.model.ShareAccessedFrom;
 import com.semanta.share.model.ShareInfo;
-import com.semanta.share.repository.ShareAccessedFromRepository;
 import com.semanta.share.repository.ShareInfoRepository;
 import com.semanta.share.utils.DelDirTask;
 import com.semanta.share.utils.LookupIP;
