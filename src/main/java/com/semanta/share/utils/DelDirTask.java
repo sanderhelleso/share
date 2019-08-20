@@ -12,7 +12,7 @@ public class DelDirTask extends TimerTask {
     private Timer timer;
     private File dir;
 
-    public DelDirTask(int timeout, String dirPath) {
+    public DelDirTask(long timeout, String dirPath) {
         this.dir = new File(dirPath);
         this.timer = new Timer();
         this.timer.schedule(this, timeout);

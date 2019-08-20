@@ -4,6 +4,7 @@ import com.semanta.share.model.FileInfo;
 import com.semanta.share.service.share.ShareServiceImpl;
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("share")
 public class ShareController {
 
-    private ShareServiceImpl shareService = new ShareServiceImpl();
+    @Autowired
+    private ShareServiceImpl shareService;
 
     @GetMapping("/health")
     public String checkHealth() {

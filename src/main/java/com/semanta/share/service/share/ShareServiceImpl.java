@@ -4,30 +4,46 @@ import java.io.File;
 import java.net.URLConnection;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import com.semanta.share.model.FileInfo;
+import com.semanta.share.model.ShareInfo;
+import com.semanta.share.repository.ShareInfoRepository;
 import com.semanta.share.utils.DelDirTask;
 
 @Service
 public class ShareServiceImpl implements ShareService {
+
+    @Autowired
+    private ShareInfoRepository shareInfoRepository;
+
     private final int MAX_AGE = 172800000; // 2 days
     private final String SHARE_DIR = "tmp-dirs";
     private final String WRk_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
 
-    public String upload(String delOnFirstView, int timeout) {
+    @Override
+    public String upload(String delOnFirstView, long timeout) {
         String dirNonce = this.makeTmpDir();
+
+        Date now = new Date();
 
         if (delOnFirstView == "1") {
             timeout = MAX_AGE;
         }
 
+        ShareInfo shareInfo = new ShareInfo(0, now, new Date(now.getTime() + timeout), delOnFirstView == "1", "Norway");
+        shareInfoRepository.save(shareInfo);
+
         new DelDirTask(timeout, concatDirs(dirNonce));
         return dirNonce;
     }
 
+    @Override
     public ArrayList<FileInfo> retrieve(String dirNonce) {
         File dir = new File(concatDirs(dirNonce));
         if (!dir.isDirectory()) {
