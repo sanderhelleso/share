@@ -4,14 +4,17 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "share_info")
 public class ShareInfo {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private String id;
 
     private int totDownloads;
     private Date lastDownloadedAt;
@@ -19,7 +22,7 @@ public class ShareInfo {
     private Boolean delOnFirstView;
     private String sharedFromCountry;
 
-    protected ShareInfo() {
+    public ShareInfo() {
         // for repo
     };
 
@@ -29,6 +32,7 @@ public class ShareInfo {
         this.lastDownloadedAt = lastDownloadedAt;
         this.expiresAt = expiresAt;
         this.delOnFirstView = delOnFirstView;
+        this.sharedFromCountry = sharedFromCountry;
     }
 
     public int getTotalDownloads() {
