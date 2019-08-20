@@ -1,7 +1,6 @@
 package com.semanta.share.controller;
 
 import com.semanta.share.utils.FileInfo;
-import com.semanta.share.model.ShareAccessedFrom;
 import com.semanta.share.model.ShareInfo;
 import com.semanta.share.service.share.ShareServiceImpl;
 
