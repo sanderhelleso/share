@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +38,19 @@ public class ShareServiceImpl implements ShareService {
 
     @Override
     public List<FileInfo> retrieve(String dirNonce) {
-        File dir = new File(concatDirs(dirNonce));
-        if (!dir.isDirectory()) {
-            // throw new Exception("Directory has expired or might have never existed");
+        Optional<ShareInfo> shareInfoOpt = shareInfoRepository.findById(dirNonce);
+
+        try {
+            shareInfoOpt.orElseThrow(() -> new Exception("Directory has expired or might have never existed"));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+        this.updateShareInfo(shareInfoOpt);
+
+        File dir = new File(concatDirs(dirNonce));
         ArrayList<FileInfo> files = new ArrayList<FileInfo>();
+
         for (File file : dir.listFiles()) {
             String name = file.getName();
             String dlPath = file.getPath();
@@ -69,6 +77,13 @@ public class ShareServiceImpl implements ShareService {
         Date expiresAt = new Date(now.getTime() + timeout);
 
         ShareInfo shareInfo = new ShareInfo(dirNonce, expiresAt, delOnFirstView, "Norway");
+        shareInfoRepository.save(shareInfo);
+    }
+
+    private void updateShareInfo(Optional<ShareInfo> shareInfoOpt) {
+        ShareInfo shareInfo = shareInfoOpt.get();
+        shareInfo.setLastDownloadedAt();
+        shareInfo.setTotDownloads();
         shareInfoRepository.save(shareInfo);
     }
 
