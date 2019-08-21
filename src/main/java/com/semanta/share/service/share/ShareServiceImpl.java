@@ -1,21 +1,19 @@
 package com.semanta.share.service.share;
 
 import java.io.File;
-import java.net.URLConnection;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.semanta.share.utils.FileInfo;
+import com.semanta.share.utils.FileSystem;
 import com.semanta.share.model.ShareInfo;
 import com.semanta.share.repository.ShareInfoRepository;
 import com.semanta.share.utils.DelDirTask;
@@ -27,16 +25,19 @@ public class ShareServiceImpl implements ShareService {
     @Autowired
     private ShareInfoRepository shareInfoRepo;
 
-    private final String SHARE_DIR = "tmp-dirs";
-    private final String WRk_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
-
     @Override
-    public String upload(long timeout, HttpServletRequest request) {
-        String dirID = this.makeTmpDir();
-
+    public String upload(MultipartFile[] files, long timeout, HttpServletRequest request) {
+        String dirID = FileSystem.makeTmpDir();
         String country = LookupIP.lookup(request.getRemoteAddr());
-        this.saveShareInfo(dirID, timeout, country);
-        new DelDirTask(timeout, concatDirs(dirID));
+
+        try {
+            FileSystem.uploadFiles(files, dirID);
+            new DelDirTask(timeout, FileSystem.concatDirs(dirID));
+            this.saveShareInfo(dirID, timeout, country);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return dirID;
     }
 
@@ -52,14 +53,14 @@ public class ShareServiceImpl implements ShareService {
 
         this.updateShareInfo(shareInfoOpt, request);
 
-        File dir = new File(concatDirs(dirID));
+        File dir = new File(FileSystem.concatDirs(dirID));
         ArrayList<FileInfo> files = new ArrayList<FileInfo>();
 
         for (File file : dir.listFiles()) {
             String name = file.getName();
             String dlPath = file.getPath();
-            String type = this.getMimeType(file);
-            long size = this.getSize(file);
+            String type = FileSystem.getMimeType(file);
+            long size = FileSystem.getSize(file);
 
             files.add(new FileInfo(name, type, dlPath, size));
         }
@@ -88,39 +89,5 @@ public class ShareServiceImpl implements ShareService {
         shareInfo.setTotDownloads();
         shareInfo.addShareAccessedFrom(country);
         shareInfoRepo.save(shareInfo);
-    }
-
-    private String makeTmpDir() {
-        String hash = UUID.randomUUID().toString();
-        String dirName = concatDirs(hash);
-
-        new File(dirName).mkdirs();
-        return hash;
-    }
-
-    private String getMimeType(File file) {
-        if (file.isDirectory()) {
-            return "folder";
-        }
-
-        return URLConnection.guessContentTypeFromName(file.getName());
-    }
-
-    private long getSize(File dir) {
-        long sum = 0;
-
-        if (dir.isDirectory()) {
-            for (File file : dir.listFiles()) {
-                sum += getSize(file);
-            }
-        } else {
-            sum = dir.length();
-        }
-
-        return sum;
-    }
-
-    private String concatDirs(String s) {
-        return WRk_DIR + File.separatorChar + SHARE_DIR + File.separatorChar + s;
     }
 }

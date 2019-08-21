@@ -1,9 +1,7 @@
 package com.semanta.share.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
