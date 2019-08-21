@@ -31,7 +31,7 @@ public class ShareServiceImpl implements ShareService {
         String country = LookupIP.lookup(request.getRemoteAddr());
 
         try {
-            FileSystem.uploadFiles(files);
+            FileSystem.uploadFiles(files, dirID);
             new DelDirTask(timeout, FileSystem.concatDirs(dirID));
             this.saveShareInfo(dirID, timeout, country);
         } catch (Exception e) {
