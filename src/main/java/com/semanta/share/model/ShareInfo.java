@@ -12,8 +12,8 @@ public class ShareInfo {
     @Id
     private String id;
 
-    private int totDownloads;
-    private Date lastDownloadedAt;
+    private int totDownloads = 0;
+    private Date lastDownloadedAt = null;
     private Date expiresAt;
     private String sharedFromCountry;
     private HashMap<String, Integer> shareAccessedFrom;
@@ -24,8 +24,6 @@ public class ShareInfo {
 
     public ShareInfo(String id, Date expiresAt, String sharedFromCountry) {
         this.id = id;
-        this.totDownloads = 0;
-        this.lastDownloadedAt = null;
         this.expiresAt = expiresAt;
         this.sharedFromCountry = sharedFromCountry;
         this.shareAccessedFrom = new HashMap<String, Integer>();
@@ -46,10 +44,6 @@ public class ShareInfo {
         }
 
         this.shareAccessedFrom.put(country, count + 1);
-    }
-
-    public String getId() {
-        return this.id;
     }
 
     public int getTotalDownloads() {

@@ -1,7 +1,5 @@
 package com.semanta.share.service.share;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +16,7 @@ import com.semanta.share.model.ShareInfo;
 import com.semanta.share.repository.ShareInfoRepository;
 import com.semanta.share.utils.DelDirTask;
 import com.semanta.share.utils.LookupIP;
+import com.semanta.share.utils.Share;
 
 @Service
 public class ShareServiceImpl implements ShareService {
@@ -42,7 +41,7 @@ public class ShareServiceImpl implements ShareService {
     }
 
     @Override
-    public List<FileInfo> retrieve(String dirID, HttpServletRequest request) {
+    public Share retrieve(String dirID, HttpServletRequest request) {
         Optional<ShareInfo> shareInfoOpt = shareInfoRepo.findById(dirID);
 
         try {
@@ -51,21 +50,11 @@ public class ShareServiceImpl implements ShareService {
             e.printStackTrace();
         }
 
-        this.updateShareInfo(shareInfoOpt, request);
+        String downloadUrl = FileSystem.concatDirs(dirID);
+        ShareInfo shareInfo = this.updateShareInfo(shareInfoOpt, request);
+        List<FileInfo> files = FileSystem.getFilesFromDir(dirID);
 
-        File dir = new File(FileSystem.concatDirs(dirID));
-        ArrayList<FileInfo> files = new ArrayList<FileInfo>();
-
-        for (File file : dir.listFiles()) {
-            String name = file.getName();
-            String dlPath = file.getPath();
-            String type = FileSystem.getMimeType(file);
-            long size = FileSystem.getSize(file);
-
-            files.add(new FileInfo(name, type, dlPath, size));
-        }
-
-        return files;
+        return new Share(downloadUrl, shareInfo, files);
     }
 
     @Override
@@ -81,13 +70,17 @@ public class ShareServiceImpl implements ShareService {
         shareInfoRepo.save(shareInfo);
     }
 
-    private void updateShareInfo(Optional<ShareInfo> shareInfoOpt, HttpServletRequest request) {
+    private ShareInfo updateShareInfo(Optional<ShareInfo> shareInfoOpt, HttpServletRequest request) {
         String country = LookupIP.lookup(request.getRemoteAddr());
 
         ShareInfo shareInfo = shareInfoOpt.get();
+
         shareInfo.setLastDownloadedAt();
         shareInfo.setTotDownloads();
         shareInfo.addShareAccessedFrom(country);
+
         shareInfoRepo.save(shareInfo);
+
+        return shareInfo;
     }
 }

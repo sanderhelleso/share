@@ -1,6 +1,6 @@
 package com.semanta.share.controller;
 
-import com.semanta.share.utils.FileInfo;
+import com.semanta.share.utils.Share;
 import com.semanta.share.model.ShareInfo;
 import com.semanta.share.service.share.ShareServiceImpl;
 
@@ -34,7 +34,7 @@ public class ShareController {
     }
 
     @GetMapping("/retrieve")
-    public List<FileInfo> retrieve(@RequestParam String dirID, HttpServletRequest request) {
+    public Share retrieve(@RequestParam String dirID, HttpServletRequest request) {
         return shareService.retrieve(dirID, request);
     }
 

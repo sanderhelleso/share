@@ -1,5 +1,7 @@
 package com.semanta.share.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -49,6 +51,22 @@ public class FileSystem {
         }
 
         return mimeType;
+    }
+
+    public static List<FileInfo> getFilesFromDir(String dirID) {
+        File dir = new File(concatDirs(dirID));
+        ArrayList<FileInfo> files = new ArrayList<FileInfo>();
+
+        for (File file : dir.listFiles()) {
+            String name = file.getName();
+            String dlPath = file.getPath();
+            String type = FileSystem.getMimeType(file);
+            long size = FileSystem.getSize(file);
+
+            files.add(new FileInfo(name, type, dlPath, size));
+        }
+
+        return files;
     }
 
     public static long getSize(File dir) {
