@@ -27,16 +27,15 @@ public class ShareServiceImpl implements ShareService {
     @Autowired
     private ShareInfoRepository shareInfoRepo;
 
-    private final int MAX_AGE = 172800000; // 2 days
     private final String SHARE_DIR = "tmp-dirs";
     private final String WRk_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
 
     @Override
-    public String upload(String delOnFirstView, long timeout, HttpServletRequest request) {
+    public String upload(long timeout, HttpServletRequest request) {
         String dirID = this.makeTmpDir();
 
         String country = LookupIP.lookup(request.getRemoteAddr());
-        this.saveShareInfo(dirID, delOnFirstView == "1", timeout, country);
+        this.saveShareInfo(dirID, timeout, country);
         new DelDirTask(timeout, concatDirs(dirID));
         return dirID;
     }
@@ -73,15 +72,11 @@ public class ShareServiceImpl implements ShareService {
         return shareInfoRepo.findAll();
     }
 
-    private void saveShareInfo(String dirID, Boolean delOnFirstView, Long timeout, String country) {
-        if (delOnFirstView) {
-            timeout = Long.valueOf(MAX_AGE);
-        }
-
+    private void saveShareInfo(String dirID, Long timeout, String country) {
         Date now = new Date();
         Date expiresAt = new Date(now.getTime() + timeout);
 
-        ShareInfo shareInfo = new ShareInfo(dirID, expiresAt, delOnFirstView, country);
+        ShareInfo shareInfo = new ShareInfo(dirID, expiresAt, country);
         shareInfoRepo.save(shareInfo);
     }
 

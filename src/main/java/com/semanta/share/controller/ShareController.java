@@ -38,7 +38,7 @@ public class ShareController {
     }
 
     @PostMapping("/upload")
-    public String upload(@RequestParam String delOnFirstView, int timeout, HttpServletRequest request) {
-        return shareService.upload(delOnFirstView, timeout, request);
+    public String upload(@RequestParam int timeout, HttpServletRequest request) {
+        return shareService.upload(timeout, request);
     }
 }

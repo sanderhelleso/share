@@ -8,7 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 public interface ShareService {
-    public abstract String upload(String delOnFirstView, long timeout, HttpServletRequest request);
+    public abstract String upload(long timeout, HttpServletRequest request);
 
     public abstract List<FileInfo> retrieve(String dirID, HttpServletRequest request);
 
