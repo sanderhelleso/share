@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("share")
@@ -38,7 +39,7 @@ public class ShareController {
     }
 
     @PostMapping("/upload")
-    public String upload(@RequestParam int timeout, HttpServletRequest request) {
-        return shareService.upload(timeout, request);
+    public String upload(@RequestParam MultipartFile[] files, int timeout, HttpServletRequest request) {
+        return shareService.upload(files, timeout, request);
     }
 }
