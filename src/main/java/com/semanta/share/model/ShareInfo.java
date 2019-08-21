@@ -17,7 +17,6 @@ public class ShareInfo {
     private int totDownloads;
     private Date lastDownloadedAt;
     private Date expiresAt;
-    private Boolean delOnFirstView;
     private String sharedFromCountry;
     private HashMap<String, Integer> shareAccessedFrom;
 
@@ -25,12 +24,11 @@ public class ShareInfo {
         // for repo
     };
 
-    public ShareInfo(String id, Date expiresAt, Boolean delOnFirstView, String sharedFromCountry) {
+    public ShareInfo(String id, Date expiresAt, String sharedFromCountry) {
         this.id = id;
         this.totDownloads = 0;
         this.lastDownloadedAt = null;
         this.expiresAt = expiresAt;
-        this.delOnFirstView = delOnFirstView;
         this.sharedFromCountry = sharedFromCountry;
         this.shareAccessedFrom = new HashMap<String, Integer>();
     };
@@ -66,10 +64,6 @@ public class ShareInfo {
 
     public Date getExpiresAt() {
         return this.expiresAt;
-    }
-
-    public Boolean getDelOnFirstView() {
-        return this.delOnFirstView;
     }
 
     public String getSharedFromCountry() {
