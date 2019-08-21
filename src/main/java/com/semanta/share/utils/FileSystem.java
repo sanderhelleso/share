@@ -1,6 +1,10 @@
 package com.semanta.share.utils;
 
 import java.util.UUID;
+
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import java.nio.file.Paths;
 import java.io.File;
 import java.net.URLConnection;
@@ -8,6 +12,13 @@ import java.net.URLConnection;
 public class FileSystem {
     private static final String SHARE_DIR = "tmp-dirs";
     private static final String WRk_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
+
+    public static void uploadFiles(MultipartFile[] files) {
+        for (MultipartFile file : files) {
+            String fileName = concatDirs(file.getOriginalFilename());
+            ServletUriComponentsBuilder.fromCurrentContextPath().path(fileName).toUriString();
+        }
+    }
 
     public static String makeTmpDir() {
         String hash = UUID.randomUUID().toString();
@@ -19,10 +30,17 @@ public class FileSystem {
 
     public static String getMimeType(File file) {
         if (file.isDirectory()) {
-            return "folder";
+            return "text/directory";
         }
 
-        return URLConnection.guessContentTypeFromName(file.getName());
+        String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+
+        // fallback to the default content type if type could not be determined
+        if (mimeType == null) {
+            mimeType = "application/octet-stream";
+        }
+
+        return mimeType;
     }
 
     public static long getSize(File dir) {

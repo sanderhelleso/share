@@ -28,10 +28,16 @@ public class ShareServiceImpl implements ShareService {
     @Override
     public String upload(MultipartFile[] files, long timeout, HttpServletRequest request) {
         String dirID = FileSystem.makeTmpDir();
-
         String country = LookupIP.lookup(request.getRemoteAddr());
-        this.saveShareInfo(dirID, timeout, country);
-        new DelDirTask(timeout, FileSystem.concatDirs(dirID));
+
+        try {
+            FileSystem.uploadFiles(files);
+            new DelDirTask(timeout, FileSystem.concatDirs(dirID));
+            this.saveShareInfo(dirID, timeout, country);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return dirID;
     }
 
