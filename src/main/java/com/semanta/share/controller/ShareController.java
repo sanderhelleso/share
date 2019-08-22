@@ -41,7 +41,7 @@ public class ShareController {
     }
 
     @GetMapping("/retrieve")
-    public Share retrieve(@RequestParam String dirID, HttpServletRequest request) {
+    public Share retrieve(@RequestParam String dirID, HttpServletRequest request) throws Exception {
         return shareService.retrieve(dirID, request);
     }
 

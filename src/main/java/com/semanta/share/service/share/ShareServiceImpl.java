@@ -1,7 +1,6 @@
 package com.semanta.share.service.share;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +8,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.HttpHeaders;
 
+import com.semanta.share.exception.DirNotFoundException;
 import com.semanta.share.exception.MyFileNotFoundException;
 import com.semanta.share.model.ShareInfo;
 import com.semanta.share.repository.ShareInfoRepository;
@@ -53,10 +53,8 @@ public class ShareServiceImpl implements ShareService {
     public Share retrieve(String dirID, HttpServletRequest request) {
         Optional<ShareInfo> shareInfoOpt = shareInfoRepo.findById(dirID);
 
-        try {
-            shareInfoOpt.orElseThrow(() -> new Exception("Directory has expired or might have never existed"));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!shareInfoOpt.isPresent()) {
+            throw new DirNotFoundException("Directory has expired or might have never existed");
         }
 
         String downloadUrl = FileSystem.concatDirs(dirID);
