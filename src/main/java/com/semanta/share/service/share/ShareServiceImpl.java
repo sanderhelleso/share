@@ -16,6 +16,7 @@ import com.semanta.share.utils.FileInfo;
 import com.semanta.share.utils.FileSystem;
 import com.semanta.share.utils.LookupIP;
 import com.semanta.share.utils.Share;
+import com.semanta.share.utils.ZipDir;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -69,11 +70,21 @@ public class ShareServiceImpl implements ShareService {
         String errMsg = "File not found: " + fileName;
 
         try {
-            String filePath = FileSystem.getUri(FileSystem.concatDirs(fileName));
-            Resource resource = new UrlResource(filePath);
+            String filePath;
+            Resource resource;
+
+            // check if root dir, make & send zip if true
+            Optional<ShareInfo> shareInfoOpt = shareInfoRepo.findById(fileName);
+            if (shareInfoOpt.isPresent()) {
+                filePath = ZipDir.zip(fileName);
+            } else {
+                filePath = FileSystem.getUri(FileSystem.concatDirs(fileName));
+            }
+
+            resource = new UrlResource(filePath);
 
             if (!resource.exists()) {
-                throw new MyFileNotFoundException(errMsg);
+                throw new MyFileNotFoundException(filePath);
             }
 
             String contentType = FileSystem.getMimeType(resource.getFile());
@@ -83,7 +94,7 @@ public class ShareServiceImpl implements ShareService {
                     .header(HttpHeaders.CONTENT_DISPOSITION, header).body(resource);
 
         } catch (IOException e) {
-            throw new MyFileNotFoundException(errMsg, e);
+            throw new MyFileNotFoundException(e.getMessage(), e);
         }
     }
 

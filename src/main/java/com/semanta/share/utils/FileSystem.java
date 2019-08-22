@@ -16,7 +16,7 @@ import java.net.URLConnection;
 
 public class FileSystem {
     private static final String SHARE_DIR = "tmp-dirs";
-    private static final String WRk_DIR = normalize(".").toString();
+    private static final String WRk_DIR = "src/main/resources";
 
     public static void uploadFiles(MultipartFile[] files, String dirID) {
         for (MultipartFile file : files) {
