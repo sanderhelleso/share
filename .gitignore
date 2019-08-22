@@ -27,8 +27,11 @@ target/
 /.nb-gradle/
 build/
 /tmp-dirs
+/tmp-zips
 
 ### VS Code ###
 .vscode/
 
 /src/main/java/com/semanta/share/config
+/src/main/resources/tmp-dirs
+/src/main/resources/tmp-zips

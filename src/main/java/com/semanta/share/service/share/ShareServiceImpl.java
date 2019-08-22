@@ -1,23 +1,31 @@
 package com.semanta.share.service.share;
 
-import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.HttpHeaders;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.semanta.share.utils.FileInfo;
-import com.semanta.share.utils.FileSystem;
+import com.semanta.share.exception.MyFileNotFoundException;
 import com.semanta.share.model.ShareInfo;
 import com.semanta.share.repository.ShareInfoRepository;
 import com.semanta.share.utils.DelDirTask;
+import com.semanta.share.utils.FileInfo;
+import com.semanta.share.utils.FileSystem;
 import com.semanta.share.utils.LookupIP;
+import com.semanta.share.utils.Share;
+import com.semanta.share.utils.ZipDir;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ShareServiceImpl implements ShareService {
@@ -42,7 +50,7 @@ public class ShareServiceImpl implements ShareService {
     }
 
     @Override
-    public List<FileInfo> retrieve(String dirID, HttpServletRequest request) {
+    public Share retrieve(String dirID, HttpServletRequest request) {
         Optional<ShareInfo> shareInfoOpt = shareInfoRepo.findById(dirID);
 
         try {
@@ -51,21 +59,44 @@ public class ShareServiceImpl implements ShareService {
             e.printStackTrace();
         }
 
-        this.updateShareInfo(shareInfoOpt, request);
+        String downloadUrl = FileSystem.concatDirs(dirID);
+        ShareInfo shareInfo = this.updateShareInfo(shareInfoOpt, request);
+        List<FileInfo> files = FileSystem.getFilesFromDir(dirID);
 
-        File dir = new File(FileSystem.concatDirs(dirID));
-        ArrayList<FileInfo> files = new ArrayList<FileInfo>();
+        return new Share(downloadUrl, shareInfo, files);
+    }
 
-        for (File file : dir.listFiles()) {
-            String name = file.getName();
-            String dlPath = file.getPath();
-            String type = FileSystem.getMimeType(file);
-            long size = FileSystem.getSize(file);
+    @Override
+    public ResponseEntity<Resource> download(String fileName) {
+        String errMsg = "File not found: " + fileName;
 
-            files.add(new FileInfo(name, type, dlPath, size));
+        try {
+            String filePath;
+            Resource resource;
+
+            // check if root dir, make & send zip if true
+            Optional<ShareInfo> shareInfoOpt = shareInfoRepo.findById(fileName);
+            if (shareInfoOpt.isPresent()) {
+                filePath = ZipDir.zip(fileName);
+            } else {
+                filePath = FileSystem.concatDirs(fileName);
+            }
+
+            resource = new UrlResource(FileSystem.getUri(filePath));
+
+            if (!resource.exists()) {
+                throw new MyFileNotFoundException(errMsg);
+            }
+
+            String contentType = FileSystem.getMimeType(resource.getFile());
+            String header = "attachment; filename=\"" + resource.getFilename() + "\"";
+
+            return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, header).body(resource);
+
+        } catch (IOException e) {
+            throw new MyFileNotFoundException(errMsg, e);
         }
-
-        return files;
     }
 
     @Override
@@ -81,13 +112,17 @@ public class ShareServiceImpl implements ShareService {
         shareInfoRepo.save(shareInfo);
     }
 
-    private void updateShareInfo(Optional<ShareInfo> shareInfoOpt, HttpServletRequest request) {
+    private ShareInfo updateShareInfo(Optional<ShareInfo> shareInfoOpt, HttpServletRequest request) {
         String country = LookupIP.lookup(request.getRemoteAddr());
 
         ShareInfo shareInfo = shareInfoOpt.get();
+
         shareInfo.setLastDownloadedAt();
         shareInfo.setTotDownloads();
         shareInfo.addShareAccessedFrom(country);
+
         shareInfoRepo.save(shareInfo);
+
+        return shareInfo;
     }
 }

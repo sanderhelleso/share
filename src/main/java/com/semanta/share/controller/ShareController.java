@@ -1,6 +1,6 @@
 package com.semanta.share.controller;
 
-import com.semanta.share.utils.FileInfo;
+import com.semanta.share.utils.Share;
 import com.semanta.share.model.ShareInfo;
 import com.semanta.share.service.share.ShareServiceImpl;
 
@@ -9,6 +9,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +35,13 @@ public class ShareController {
         return shareService.retrieveAll();
     }
 
+    @GetMapping("/download")
+    public ResponseEntity<Resource> download(@RequestParam String fileName) throws Exception {
+        return shareService.download(fileName);
+    }
+
     @GetMapping("/retrieve")
-    public List<FileInfo> retrieve(@RequestParam String dirID, HttpServletRequest request) {
+    public Share retrieve(@RequestParam String dirID, HttpServletRequest request) {
         return shareService.retrieve(dirID, request);
     }
 
