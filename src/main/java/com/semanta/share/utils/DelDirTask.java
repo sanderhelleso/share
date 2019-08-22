@@ -20,6 +20,7 @@ public class DelDirTask extends TimerTask {
 
     @Override
     public void run() {
+        new File(FileSystem.concatZip(this.dir.getName())).delete();
         this.walkAndDelete(this.dir);
         this.timer.cancel();
     }

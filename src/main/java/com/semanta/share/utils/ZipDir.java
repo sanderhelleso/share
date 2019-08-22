@@ -10,7 +10,7 @@ import java.util.zip.ZipOutputStream;
 public class ZipDir {
 
     public static String zip(String dirID) throws IOException {
-        String zipPath = "src/main/resources/tmp-zips/" + dirID + ".zip";
+        String zipPath = FileSystem.concatZip(dirID);
 
         // skip if zip exists
         if (new File(zipPath).exists()) {
