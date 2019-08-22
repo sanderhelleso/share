@@ -40,8 +40,8 @@ public class ShareServiceImpl implements ShareService {
 
         // ensure storage has room for new upload
         if (!FileSystem.canUpload(files)) {
-            throw new StorageFullException(
-                    "Our service currently has alot of traffic and we are out of storage space to handle your uploads! Please try again soon");
+            String errMsg = "Our service currently has alot of traffic and we are out of storage space to handle your uploads!";
+            throw new StorageFullException(errMsg);
         }
 
         try {
