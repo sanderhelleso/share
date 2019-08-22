@@ -1,11 +1,21 @@
 package com.semanta.share.service.share;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.HttpHeaders;
+
+import com.semanta.share.exception.MyFileNotFoundException;
+import com.semanta.share.model.ShareInfo;
+import com.semanta.share.repository.ShareInfoRepository;
+import com.semanta.share.utils.DelDirTask;
+import com.semanta.share.utils.FileInfo;
+import com.semanta.share.utils.FileSystem;
+import com.semanta.share.utils.LookupIP;
+import com.semanta.share.utils.Share;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -14,14 +24,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.semanta.share.utils.FileInfo;
-import com.semanta.share.utils.FileSystem;
-import com.semanta.share.model.ShareInfo;
-import com.semanta.share.repository.ShareInfoRepository;
-import com.semanta.share.utils.DelDirTask;
-import com.semanta.share.utils.LookupIP;
-import com.semanta.share.utils.Share;
 
 @Service
 public class ShareServiceImpl implements ShareService {
@@ -64,12 +66,14 @@ public class ShareServiceImpl implements ShareService {
 
     @Override
     public ResponseEntity<Resource> download(String fileName) {
+        String errMsg = "File not found: " + fileName;
+
         try {
-            String filePath = FileSystem.getUri(fileName);
+            String filePath = FileSystem.getUri(FileSystem.concatDirs(fileName));
             Resource resource = new UrlResource(filePath);
 
             if (!resource.exists()) {
-                throw new Exception("File not found");
+                throw new MyFileNotFoundException(errMsg);
             }
 
             String contentType = FileSystem.getMimeType(resource.getFile());
@@ -78,11 +82,9 @@ public class ShareServiceImpl implements ShareService {
             return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
                     .header(HttpHeaders.CONTENT_DISPOSITION, header).body(resource);
 
-        } catch (Exception e) {
-            // TODO: handle exception
+        } catch (IOException e) {
+            throw new MyFileNotFoundException(errMsg, e);
         }
-
-        return null;
     }
 
     @Override
