@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,7 +45,7 @@ public class ShareController {
         return shareService.retrieve(dirID, request);
     }
 
-    @PostMapping("/upload")
+    @PutMapping("/upload")
     public String upload(@RequestParam MultipartFile[] files, int timeout, HttpServletRequest request)
             throws Exception {
         return shareService.upload(files, timeout, request);

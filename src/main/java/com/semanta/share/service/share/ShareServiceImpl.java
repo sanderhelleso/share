@@ -36,6 +36,7 @@ public class ShareServiceImpl implements ShareService {
 
     @Override
     public String upload(MultipartFile[] files, long timeout, HttpServletRequest request) {
+
         try {
             String dirID = FileSystem.makeTmpDir();
             String country = LookupIP.lookup(request.getRemoteAddr());
@@ -67,7 +68,7 @@ public class ShareServiceImpl implements ShareService {
 
     @Override
     public ResponseEntity<Resource> download(String fileName) {
-        String errMsg = "File not found: " + fileName;
+        String errMsg = "Unable to download file cause it no longer exists or never had";
 
         try {
             String filePath;
@@ -94,7 +95,7 @@ public class ShareServiceImpl implements ShareService {
                     .header(HttpHeaders.CONTENT_DISPOSITION, header).body(resource);
 
         } catch (IOException e) {
-            throw new MyFileNotFoundException(errMsg, e);
+            throw new MyFileNotFoundException(errMsg + ": " + fileName, e);
         }
     }
 
