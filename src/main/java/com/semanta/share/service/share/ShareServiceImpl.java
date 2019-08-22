@@ -10,6 +10,7 @@ import javax.ws.rs.core.HttpHeaders;
 
 import com.semanta.share.exception.DirNotFoundException;
 import com.semanta.share.exception.MyFileNotFoundException;
+import com.semanta.share.exception.UploadFailedException;
 import com.semanta.share.model.ShareInfo;
 import com.semanta.share.repository.ShareInfoRepository;
 import com.semanta.share.utils.DelDirTask;
@@ -35,18 +36,18 @@ public class ShareServiceImpl implements ShareService {
 
     @Override
     public String upload(MultipartFile[] files, long timeout, HttpServletRequest request) {
-        String dirID = FileSystem.makeTmpDir();
-        String country = LookupIP.lookup(request.getRemoteAddr());
-
         try {
+            String dirID = FileSystem.makeTmpDir();
+            String country = LookupIP.lookup(request.getRemoteAddr());
+
             FileSystem.uploadFiles(files, dirID);
             new DelDirTask(timeout, FileSystem.concatDirs(dirID));
             this.saveShareInfo(dirID, timeout, country);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        return dirID;
+            return dirID;
+        } catch (Exception e) {
+            throw new UploadFailedException("Unable to upload files. Please try again");
+        }
     }
 
     @Override
