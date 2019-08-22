@@ -10,6 +10,7 @@ import javax.ws.rs.core.HttpHeaders;
 
 import com.semanta.share.exception.DirNotFoundException;
 import com.semanta.share.exception.MyFileNotFoundException;
+import com.semanta.share.exception.StorageFullException;
 import com.semanta.share.exception.UploadFailedException;
 import com.semanta.share.model.ShareInfo;
 import com.semanta.share.repository.ShareInfoRepository;
@@ -36,6 +37,12 @@ public class ShareServiceImpl implements ShareService {
 
     @Override
     public String upload(MultipartFile[] files, long timeout, HttpServletRequest request) {
+
+        // ensure storage has room for new upload
+        if (!FileSystem.canUpload(files)) {
+            String errMsg = "Our service currently has alot of traffic and we are out of storage space to handle your uploads!";
+            throw new StorageFullException(errMsg);
+        }
 
         try {
             String dirID = FileSystem.makeTmpDir();
