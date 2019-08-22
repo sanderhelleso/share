@@ -1,5 +1,6 @@
 package com.semanta.share.utils;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -17,6 +18,7 @@ public class DelDirTask extends TimerTask {
     private long MAX_TIMEOUT = 3600000 * 3; // 3 hrs
     private Timer timer;
     private File dir;
+    private Long expiresAt;
 
     @Autowired
     private ShareInfoRepository shareInfoRepo;
@@ -29,6 +31,9 @@ public class DelDirTask extends TimerTask {
             timeout = MAX_TIMEOUT;
         }
 
+        this.expiresAt = new Date().getTime() + timeout;
+        FileSystem.dirExpiresAtTracker.add(this.expiresAt);
+
         this.timer.schedule(this, timeout);
     }
 
@@ -38,6 +43,7 @@ public class DelDirTask extends TimerTask {
 
         new File(FileSystem.concatZip(dirID)).delete();
         shareInfoRepo.deleteById(dirID);
+        FileSystem.dirExpiresAtTracker.remove(this.expiresAt);
 
         this.walkAndDelete(this.dir);
         this.timer.cancel();

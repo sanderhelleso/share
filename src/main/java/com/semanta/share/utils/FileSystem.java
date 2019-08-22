@@ -2,6 +2,7 @@ package com.semanta.share.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,9 @@ public class FileSystem {
     private static final String WRK_DIR = "src/main/resources/";
     private static final String SHARE_DIR = "tmp-dirs/"; // uploaded folders
     private static final String ZIP_DIR = "tmp-zips/"; // generated zip files
+
+    // keep track of when uploaded dirs expires
+    public static PriorityQueue<Long> dirExpiresAtTracker = new PriorityQueue<Long>();
 
     public static void uploadFiles(MultipartFile[] files, String dirID) {
         for (MultipartFile file : files) {
