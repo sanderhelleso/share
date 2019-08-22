@@ -5,8 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.HttpHeaders;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,6 +60,29 @@ public class ShareServiceImpl implements ShareService {
         List<FileInfo> files = FileSystem.getFilesFromDir(dirID);
 
         return new Share(downloadUrl, shareInfo, files);
+    }
+
+    @Override
+    public ResponseEntity<Resource> download(String fileName) {
+        try {
+            String filePath = FileSystem.getUri(fileName);
+            Resource resource = new UrlResource(filePath);
+
+            if (!resource.exists()) {
+                throw new Exception("File not found");
+            }
+
+            String contentType = FileSystem.getMimeType(resource.getFile());
+            String header = "attachment; filename=\"" + resource.getFilename() + "\"";
+
+            return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, header).body(resource);
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+        return null;
     }
 
     @Override

@@ -11,7 +11,7 @@ public class Share {
     private List<FileInfo> files;
 
     public Share(String downloadUrl, ShareInfo info, List<FileInfo> files) {
-        this.downloadUrl = FileSystem.strToUri(downloadUrl);
+        this.downloadUrl = FileSystem.getUri(downloadUrl);
         this.totalSize = calcSize(files);
         this.info = info;
         this.files = files;

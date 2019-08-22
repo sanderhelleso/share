@@ -59,7 +59,7 @@ public class FileSystem {
 
         for (File file : dir.listFiles()) {
             String name = file.getName();
-            String dlPath = strToUri(file.getPath());
+            String dlPath = getUri(file.getPath());
             String type = FileSystem.getMimeType(file);
             long size = FileSystem.getSize(file);
 
@@ -87,7 +87,7 @@ public class FileSystem {
         return WRk_DIR + File.separatorChar + SHARE_DIR + File.separatorChar + s;
     }
 
-    public static String strToUri(String s) {
+    public static String getUri(String s) {
         return normalize(s).toUri().toString();
     }
 
