@@ -15,9 +15,10 @@ import java.io.IOException;
 import java.net.URLConnection;
 
 public class FileSystem {
-    private static final String WRk_DIR = "src/main/resources/";
-    private static final String ZIP_DIR = "tmp-zips/"; // generated zip files
+    private static final Long MAX_STORAGE_SIZE = 107374182400L; // 100gb
+    private static final String WRK_DIR = "src/main/resources/";
     private static final String SHARE_DIR = "tmp-dirs/"; // uploaded folders
+    private static final String ZIP_DIR = "tmp-zips/"; // generated zip files
 
     public static void uploadFiles(MultipartFile[] files, String dirID) {
         for (MultipartFile file : files) {
@@ -70,6 +71,17 @@ public class FileSystem {
         return files;
     }
 
+    public static Boolean canUpload(MultipartFile[] files) {
+        long uploadSize = 0;
+        for (MultipartFile file : files) {
+            uploadSize += file.getSize();
+        }
+
+        long newTotSize = getSize(new File(WRK_DIR + SHARE_DIR)) + uploadSize;
+
+        return newTotSize < MAX_STORAGE_SIZE;
+    }
+
     public static long getSize(File dir) {
         long sum = 0;
 
@@ -85,11 +97,11 @@ public class FileSystem {
     }
 
     public static String concatDirs(String s) {
-        return WRk_DIR + SHARE_DIR + s;
+        return WRK_DIR + SHARE_DIR + s;
     }
 
     public static String concatZip(String s) {
-        return WRk_DIR + ZIP_DIR + s + ".zip";
+        return WRK_DIR + ZIP_DIR + s + ".zip";
     }
 
     public static String getUri(String s) {
