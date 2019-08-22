@@ -15,8 +15,9 @@ import java.io.IOException;
 import java.net.URLConnection;
 
 public class FileSystem {
-    private static final String SHARE_DIR = "tmp-dirs";
-    private static final String WRk_DIR = "src/main/resources";
+    private static final String WRk_DIR = "src/main/resources/";
+    private static final String ZIP_DIR = "tmp-zips/"; // generated zip files
+    private static final String SHARE_DIR = "tmp-dirs/"; // uploaded folders
 
     public static void uploadFiles(MultipartFile[] files, String dirID) {
         for (MultipartFile file : files) {
@@ -84,7 +85,11 @@ public class FileSystem {
     }
 
     public static String concatDirs(String s) {
-        return WRk_DIR + File.separatorChar + SHARE_DIR + File.separatorChar + s;
+        return WRk_DIR + SHARE_DIR + s;
+    }
+
+    public static String concatZip(String s) {
+        return WRk_DIR + ZIP_DIR + s + ".zip";
     }
 
     public static String getUri(String s) {
