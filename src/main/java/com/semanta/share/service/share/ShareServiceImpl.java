@@ -1,6 +1,7 @@
 package com.semanta.share.service.share;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -78,13 +79,13 @@ public class ShareServiceImpl implements ShareService {
             if (shareInfoOpt.isPresent()) {
                 filePath = ZipDir.zip(fileName);
             } else {
-                filePath = FileSystem.getUri(FileSystem.concatDirs(fileName));
+                filePath = FileSystem.concatDirs(fileName);
             }
 
-            resource = new UrlResource(filePath);
+            resource = new UrlResource(FileSystem.getUri(filePath));
 
             if (!resource.exists()) {
-                throw new MyFileNotFoundException(filePath);
+                throw new MyFileNotFoundException(errMsg);
             }
 
             String contentType = FileSystem.getMimeType(resource.getFile());
@@ -94,7 +95,7 @@ public class ShareServiceImpl implements ShareService {
                     .header(HttpHeaders.CONTENT_DISPOSITION, header).body(resource);
 
         } catch (IOException e) {
-            throw new MyFileNotFoundException(e.getMessage(), e);
+            throw new MyFileNotFoundException(errMsg, e);
         }
     }
 
