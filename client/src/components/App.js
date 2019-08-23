@@ -23,7 +23,7 @@ const GlobalStyle = createGlobalStyle`
         padding: 0;
         overflow-x: hidden;
         min-height: 100vh;
-        background-color: #7a08fa;
+        background-color: #6b48ff;
     }
 
     h1, h2, h3, h4, h5 {

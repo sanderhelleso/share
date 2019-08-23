@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import AddBtn from './AddBtn';
 import UploadBtn from './UploadBtn';
 import bytesToUnit from '../../util/bytesToUnit';
+import _fetch from '../../util/_fetch';
+import makeFileForm from '../../util/makeFileForm';
 
 const MAX_UPLOAD_SIZE = 524288000; // 500mb
 
@@ -11,9 +13,22 @@ const Upload = () => {
 	const [ files, setFiles ] = useState([]);
 	const [ totSize, setTotSize ] = useState(0);
 
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		const response = await _fetch(
+			'http://localhost:4000/share/upload?timeout=55155000',
+			'PUT',
+			makeFileForm(files)
+		);
+
+		const data = await response.text();
+		console.log(data);
+	};
+
 	const handleChange = () => {
 		setFiles(inputRef.current.files);
-		_seTtotSize(inputRef.current.files);
+		_setTotSize(inputRef.current.files);
 	};
 
 	const clearFiles = () => {
@@ -36,7 +51,7 @@ const Upload = () => {
 		return !files.length || totSize > MAX_UPLOAD_SIZE;
 	};
 
-	const _seTtotSize = (files) => {
+	const _setTotSize = (files) => {
 		if (!files.length) return 0;
 
 		const size = Array.from(files).reduce(getSum, 0);
@@ -46,8 +61,8 @@ const Upload = () => {
 	const getSum = (total, { size }) => total + Math.round(size);
 
 	return (
-		<StyledForm method="put" enctype="multipart/form-data">
-			<input ref={inputRef} type="file" multiple={true} onChange={handleChange} />
+		<StyledForm onSubmit={handleSubmit}>
+			<input ref={inputRef} type="file" multiple={true} onChange={handleChange} required={true} />
 			<StyledInput onClick={() => inputRef.current.click()}>
 				<h5>{setText()}</h5>
 				<AddBtn remove={files.length} clearFiles={clearFiles} />
@@ -59,7 +74,7 @@ const Upload = () => {
 
 export default Upload;
 
-const StyledForm = styled.div`
+const StyledForm = styled.form`
 	input {
 		display: none;
 	}
