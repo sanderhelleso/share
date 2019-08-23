@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Upload from '../upload/Upload';
 import Loader from '../../util/Loader';
@@ -24,20 +24,16 @@ const Home = () => {
 		}
 
 		return (
-			<Fragment>
+			<StyledDiv>
 				<h1>SHARE</h1>
 				<p>Upload and share up to 500MB for FREE</p>
 				<span>Files automatically expire after 1 hour</span>
 				<Upload setLoading={setLoading} setShareCode={setShareCode} />
-			</Fragment>
+			</StyledDiv>
 		);
 	};
 
-	return (
-		<StyledHome>
-			<StyledDiv>{renderHeader()}</StyledDiv>
-		</StyledHome>
-	);
+	return <StyledHome>{renderHeader()}</StyledHome>;
 };
 
 export default Home;
