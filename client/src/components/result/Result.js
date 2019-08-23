@@ -1,12 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 import { fadeInPure } from '../../util/keyframes';
-import ShareCode from './ShareCode';
+import ShareUrl from './ShareUrl';
 import ResetBtn from './ResetBtn';
+import copyToClip from '../../util/copyToClip';
 
-const baseUrl = 'http://localhost:4000/share/download?fileName=';
+const baseUrl = 'http://localhost:4000/share/retrieve?dirID=';
+const canCopy = navigator.clipboard;
 
 const Result = ({ shareCode, reset }) => {
+	const shareUrl = `${baseUrl}${shareCode}`;
+	const copy = () => copyToClip(shareUrl);
+
 	return (
 		<StyledDiv>
 			<ResetBtn reset={reset} />
@@ -16,8 +21,12 @@ const Result = ({ shareCode, reset }) => {
 			<span id="emoji" role="img" className="no-select">
 				👇
 			</span>
-			<ShareCode shareCode={shareCode} />
-			<span className="no-select">Click to Copy</span>
+			<ShareUrl shareUrl={shareUrl} copy={canCopy ? copy : null} />
+			{canCopy && (
+				<span className="no-select" onClick={copy}>
+					Click to Copy
+				</span>
+			)}
 		</StyledDiv>
 	);
 };

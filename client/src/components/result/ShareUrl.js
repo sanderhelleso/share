@@ -2,18 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 import { Clipboard } from 'react-feather';
 
-const ShareCode = ({ shareCode }) => {
+const ShareUrl = ({ shareUrl, copy }) => {
 	return (
-		<StyledCode>
-			<h2>{shareCode}</h2>
+		<StyledUrl canCopy={copy} onClick={copy}>
+			<h2>{shareUrl}</h2>
 			<Clipboard />
-		</StyledCode>
+		</StyledUrl>
 	);
 };
 
-export default ShareCode;
+export default ShareUrl;
 
-const StyledCode = styled.div`
+const StyledUrl = styled.div`
 	min-width: 500px;
 	min-height: 60px;
 	border-radius: 4px;
@@ -22,18 +22,19 @@ const StyledCode = styled.div`
 	justify-content: space-between;
 	align-items: center;
 	padding: 0 1rem;
-	cursor: pointer;
+	cursor: ${({ canCopy }) => (canCopy ? 'pointer' : 'normal')};
 	margin-top: 4rem;
 	margin-bottom: 2rem;
 
 	h2 {
 		color: #ffffff;
-		font-size: 1.25rem;
+		font-size: 0.9rem;
 		margin: 0;
 	}
 
 	svg {
 		stroke: #ffffff;
 		opacity: 0.5;
+		margin-left: 2rem;
 	}
 `;

@@ -16,6 +16,7 @@ const Upload = ({ setLoading, setShareCode }) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
+		const t = new Date().getTime();
 
 		const response = await _fetch(
 			'http://localhost:4000/share/upload?timeout=55155000',
@@ -25,7 +26,8 @@ const Upload = ({ setLoading, setShareCode }) => {
 
 		const shareCode = await response.text();
 
-		setTimeout(() => setShareCode(shareCode), 1000);
+		const timeTaken = new Date().getTime() - t;
+		setTimeout(() => setShareCode(shareCode), timeTaken < 1000 ? 1000 : 0);
 	};
 
 	const handleChange = () => {
