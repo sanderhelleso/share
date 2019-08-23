@@ -4,6 +4,7 @@ import AddBtn from './AddBtn';
 import UploadBtn from './UploadBtn';
 import bytesToUnit from '../../util/bytesToUnit';
 import _fetch from '../../util/_fetch';
+import makeFileForm from '../../util/makeFileForm';
 
 const MAX_UPLOAD_SIZE = 524288000; // 500mb
 
@@ -15,17 +16,18 @@ const Upload = ({ setLoading, setShareCode }) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
+		const t = new Date().getTime();
 
-		/*const response = await _fetch(
+		const response = await _fetch(
 			'http://localhost:4000/share/upload?timeout=55155000',
 			'PUT',
 			makeFileForm(files)
 		);
 
-		const data = await response.text();*/
-		//console.log(data);
+		const shareCode = await response.text();
 
-		setTimeout(() => setShareCode('123'), 1000);
+		const timeTaken = new Date().getTime() - t;
+		setTimeout(() => setShareCode(shareCode), timeTaken < 1000 ? 1000 : 0);
 	};
 
 	const handleChange = () => {

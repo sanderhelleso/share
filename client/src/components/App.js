@@ -42,6 +42,9 @@ const GlobalStyle = createGlobalStyle`
         font-family: 'Comfortaa', cursive;
     }
 
+    p {
+        line-height: 1.6;
+    }
 
     a {
         text-decoration: none;
