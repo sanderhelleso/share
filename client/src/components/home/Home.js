@@ -1,17 +1,32 @@
-import React from 'react';
+import React, { useState, Fragment } from 'react';
 import styled from 'styled-components';
 import Upload from '../upload/Upload';
-import UploadBtn from '../upload/UploadBtn';
+import Loader from '../../util/Loader';
 
 const Home = () => {
-	return (
-		<StyledHome>
-			<h1>SHARE</h1>
-			<p>Upload and share up to 500MB for FREE</p>
-			<span>Files automatically expire after 1 hour</span>
-			<Upload />
-		</StyledHome>
-	);
+	const [ loading, setLoading ] = useState(false);
+
+	const renderHeader = () => {
+		if (loading) {
+			return (
+				<Fragment>
+					<Loader />
+					<p className="loading">Uploading files...</p>
+				</Fragment>
+			);
+		}
+
+		return (
+			<StyledDiv>
+				<h1>SHARE</h1>
+				<p>Upload and share up to 500MB for FREE</p>
+				<span>Files automatically expire after 1 hour</span>
+				<Upload loading={loading} setLoading={setLoading} />
+			</StyledDiv>
+		);
+	};
+
+	return <StyledHome>{renderHeader()}</StyledHome>;
 };
 
 export default Home;
@@ -34,6 +49,11 @@ const StyledHome = styled.main`
 		opacity: 0.7;
 	}
 
+	p.loading {
+		opacity: 0.7;
+		margin-top: 2rem;
+	}
+
 	max-width: 75%;
 	min-height: 100vh;
 	display: flex;
@@ -42,3 +62,5 @@ const StyledHome = styled.main`
 	align-items: center;
 	margin: 0 auto;
 `;
+
+const StyledDiv = styled.div`text-align: center;`;
