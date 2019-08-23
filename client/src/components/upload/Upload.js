@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import AddBtn from './AddBtn';
 import UploadBtn from './UploadBtn';
 import bytesToUnit from '../../util/bytesToUnit';
+import _fetch from '../../util/_fetch';
+import makeFileForm from '../../util/makeFileForm';
 
 const MAX_UPLOAD_SIZE = 524288000; // 500mb
 
@@ -11,8 +13,17 @@ const Upload = () => {
 	const [ files, setFiles ] = useState([]);
 	const [ totSize, setTotSize ] = useState(0);
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
+
+		const response = await _fetch(
+			'http://localhost:4000/share/upload?timeout=55155000',
+			'PUT',
+			makeFileForm(files)
+		);
+
+		const data = await response.text();
+		console.log(data);
 	};
 
 	const handleChange = () => {

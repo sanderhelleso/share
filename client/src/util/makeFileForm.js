@@ -1,8 +1,8 @@
 export default (files) => {
 	const formData = new FormData();
 
-	Array.from(files).forEach((file, i) => {
-		formData.append(`file_${i}`, file);
+	Array.from(files).forEach((file) => {
+		formData.append('file', file);
 	});
 
 	return formData;
