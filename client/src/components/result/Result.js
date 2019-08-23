@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { fadeInPure } from '../../util/keyframes';
 import ShareUrl from './ShareUrl';
@@ -10,7 +10,15 @@ const canCopy = navigator.clipboard;
 
 const Result = ({ shareCode, reset }) => {
 	const shareUrl = `${baseUrl}${shareCode}`;
-	const copy = () => copyToClip(shareUrl);
+	const [ copied, setCopied ] = useState(false);
+
+	const copy = () => {
+		if (copied) return;
+
+		copyToClip(shareUrl);
+		setCopied(true);
+		setTimeout(() => setCopied(false), 3000);
+	};
 
 	return (
 		<StyledDiv>
@@ -18,13 +26,13 @@ const Result = ({ shareCode, reset }) => {
 			<p className="share">
 				Share the link below with anyone you want to be able to see and download your files!
 			</p>
-			<span id="emoji" role="img" className="no-select">
+			<span id="emoji" role="img" className="no-select" aria-label="Copy share link below">
 				👇
 			</span>
 			<ShareUrl shareUrl={shareUrl} copy={canCopy ? copy : null} />
 			{canCopy && (
 				<span className="no-select" onClick={copy}>
-					Click to Copy
+					{copied ? 'Copied to Clipboard!' : 'Click to Copy'}
 				</span>
 			)}
 		</StyledDiv>
