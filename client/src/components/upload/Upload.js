@@ -1,4 +1,4 @@
-import React, { useRef, useState, Fragment } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import AddBtn from './AddBtn';
 import UploadBtn from './UploadBtn';
@@ -7,7 +7,7 @@ import _fetch from '../../util/_fetch';
 
 const MAX_UPLOAD_SIZE = 524288000; // 500mb
 
-const Upload = ({ loading, setLoading }) => {
+const Upload = ({ setLoading, setShareCode }) => {
 	const inputRef = useRef();
 	const [ files, setFiles ] = useState([]);
 	const [ totSize, setTotSize ] = useState(0);
@@ -24,6 +24,8 @@ const Upload = ({ loading, setLoading }) => {
 
 		const data = await response.text();*/
 		//console.log(data);
+
+		setTimeout(() => setShareCode('123'), 1000);
 	};
 
 	const handleChange = () => {
