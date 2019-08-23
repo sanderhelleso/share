@@ -7,7 +7,8 @@ const Home = () => {
 	return (
 		<StyledHome>
 			<h1>SHARE</h1>
-			<p>Upload up to 500mb of files and share to whoever you want</p>
+			<p>Upload and share up to 500MB for FREE</p>
+			<span>Files automatically expire after 1 hour</span>
 			<Upload />
 		</StyledHome>
 	);
@@ -22,8 +23,15 @@ const StyledHome = styled.main`
 		letter-spacing: 4px;
 	}
 
-	p {
+	p,
+	span {
 		color: #ffffff;
+	}
+
+	span {
+		font-size: 12px;
+		margin-top: 1rem;
+		opacity: 0.7;
 	}
 
 	max-width: 75%;

@@ -1,11 +1,13 @@
 import React, { Fragment } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import Home from './home/Home';
+import Github from './home/Github';
 
 const App = () => {
 	return (
 		<Fragment>
 			<GlobalStyle />
+			<Github />
 			<Home />
 		</Fragment>
 	);

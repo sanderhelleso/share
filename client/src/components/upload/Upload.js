@@ -16,12 +16,20 @@ const Upload = () => {
 		_seTtotSize(inputRef.current.files);
 	};
 
+	const clearFiles = () => {
+		setFiles([]);
+		setTotSize(0);
+		inputRef.current.value = '';
+	};
+
 	const setText = () => {
 		if (!files.length) {
 			return 'Select files...';
 		}
 
-		return `${files.length} files selected (${bytesToUnit(totSize)})`;
+		const grammar = `file${files.length === 1 ? '' : 's'}`;
+
+		return `${files.length} ${grammar} selected (${bytesToUnit(totSize)})`;
 	};
 
 	const isDisabled = () => {
@@ -42,7 +50,7 @@ const Upload = () => {
 			<input ref={inputRef} type="file" multiple={true} onChange={handleChange} />
 			<StyledInput onClick={() => inputRef.current.click()}>
 				<h5>{setText()}</h5>
-				<AddBtn />
+				<AddBtn remove={files.length} clearFiles={clearFiles} />
 			</StyledInput>
 			<UploadBtn text="Upload" disabled={isDisabled()} />
 		</StyledForm>
