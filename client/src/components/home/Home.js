@@ -1,15 +1,41 @@
-import React from 'react';
+import React, { useState, Fragment } from 'react';
 import styled from 'styled-components';
 import Upload from '../upload/Upload';
-import UploadBtn from '../upload/UploadBtn';
+import Loader from '../../util/Loader';
+import { fadeInPure } from '../../util/keyframes';
+import Result from '../result/Result';
 
 const Home = () => {
+	const [ loading, setLoading ] = useState(false);
+	const [ shareCode, setShareCode ] = useState('');
+
+	const reset = () => {
+		setLoading(false);
+		setShareCode('');
+	};
+
+	const renderHeader = () => {
+		if (shareCode) {
+			return <Result shareCode={shareCode} reset={reset} />;
+		}
+
+		if (loading) {
+			return <Loader text="Uploading..." />;
+		}
+
+		return (
+			<Fragment>
+				<h1>SHARE</h1>
+				<p>Upload and share up to 500MB for FREE</p>
+				<span>Files automatically expire after 1 hour</span>
+				<Upload setLoading={setLoading} setShareCode={setShareCode} />
+			</Fragment>
+		);
+	};
+
 	return (
 		<StyledHome>
-			<h1>SHARE</h1>
-			<p>Upload and share up to 500MB for FREE</p>
-			<span>Files automatically expire after 1 hour</span>
-			<Upload />
+			<StyledDiv>{renderHeader()}</StyledDiv>
 		</StyledHome>
 	);
 };
@@ -41,4 +67,9 @@ const StyledHome = styled.main`
 	justify-content: center;
 	align-items: center;
 	margin: 0 auto;
+`;
+
+const StyledDiv = styled.div`
+	animation: ${fadeInPure} 0.8s ease forwards;
+	text-align: center;
 `;
