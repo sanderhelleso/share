@@ -5,7 +5,7 @@ import ShareUrl from './ShareUrl';
 import ResetBtn from './ResetBtn';
 import copyToClip from '../../util/copyToClip';
 
-const baseUrl = 'http://localhost:4000/share/retrieve?dirID=';
+const baseUrl = 'http://localhost:3000/download/';
 const canCopy = navigator.clipboard;
 
 const Result = ({ shareCode, reset }) => {

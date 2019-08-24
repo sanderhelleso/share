@@ -1,14 +1,14 @@
 import React, { Fragment } from 'react';
 import { createGlobalStyle } from 'styled-components';
-import Home from './home/Home';
 import Github from './home/Github';
+import Router from './Router';
 
 const App = () => {
 	return (
 		<Fragment>
 			<GlobalStyle />
 			<Github />
-			<Home />
+			<Router />
 		</Fragment>
 	);
 };
