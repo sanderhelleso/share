@@ -52,17 +52,11 @@ const Download = ({ history, match: { params: { shareCode } } }) => {
 	};
 
 	const render = () => {
-		if (data) {
-			return renderDownload();
-		}
-
-		if (data === false) {
-			return <h1>Invalid code</h1>;
-		}
+		if (data) return renderDownload();
 
 		return (
 			<StyledLoaderCont>
-				<Loader text="Gathering files..." />
+				{data === false ? <h1>Invalid code</h1> : <Loader text="Gathering files..." />}
 			</StyledLoaderCont>
 		);
 	};
@@ -101,4 +95,8 @@ const StyledLoaderCont = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
+
+	h1 {
+		color: #ffffff;
+	}
 `;

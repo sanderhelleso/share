@@ -8,6 +8,7 @@ import javax.persistence.Id;
 
 @Entity
 public class ShareInfo {
+    private long ONE_HOUR = 3600000L;
 
     @Id
     private String id;
@@ -22,9 +23,9 @@ public class ShareInfo {
         // for repo
     };
 
-    public ShareInfo(String id, Date expiresAt, String sharedFromCountry) {
+    public ShareInfo(String id, String sharedFromCountry) {
         this.id = id;
-        this.expiresAt = expiresAt;
+        this.expiresAt = new Date(new Date().getTime() + ONE_HOUR);
         this.sharedFromCountry = sharedFromCountry;
         this.shareAccessedFrom = new HashMap<String, Integer>();
     };

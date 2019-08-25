@@ -13,7 +13,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 public interface ShareService {
-    public abstract String upload(MultipartFile[] files, long timeout, HttpServletRequest request);
+    public abstract String upload(MultipartFile[] files, HttpServletRequest request);
 
     public abstract Share retrieve(String dirID, HttpServletRequest request);
 
