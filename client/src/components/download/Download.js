@@ -43,8 +43,8 @@ const Download = ({ history, match: { params: { shareCode } } }) => {
 				<StyledDiv>
 					<Header numFiles={files.length} expiresAt={expiresAt} sharedFrom={sharedFromCountry} />
 					<StyledGrid>
-						<FilesList files={files} />
-						<Stats stats={stats} />
+						<FilesList files={files} shareCode={shareCode} />
+						<Stats stats={stats} shareCode={shareCode} />
 					</StyledGrid>
 				</StyledDiv>
 			</Fragment>
@@ -73,14 +73,16 @@ const Download = ({ history, match: { params: { shareCode } } }) => {
 export default withRouter(Download);
 
 const StyledDiv = styled.div`
-	padding-top: 10rem;
-	min-height: calc(90vh - 10rem);
+	padding-top: 7rem;
+	min-height: calc(90vh - 7rem);
 	max-width: 1100px;
 	margin: 0 auto;
 	animation: ${fadeInPure} 0.8s ease forwards;
 
 	@media screen and (max-width: 1350px) {
 		max-width: 85%;
+		padding-top: 10rem;
+		min-height: calc(90vh - 10rem);
 	}
 `;
 

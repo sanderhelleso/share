@@ -61,11 +61,10 @@ public class FileSystem {
 
         for (File file : dir.listFiles()) {
             String name = file.getName();
-            String dlPath = getUri(file.getPath());
             String type = FileSystem.getMimeType(file);
             long size = FileSystem.getSize(file);
 
-            files.add(new FileInfo(name, type, dlPath, size));
+            files.add(new FileInfo(name, type, size));
         }
 
         return files;

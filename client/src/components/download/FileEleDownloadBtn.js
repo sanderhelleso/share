@@ -3,7 +3,9 @@ import styled from 'styled-components';
 import { Download } from 'react-feather';
 import bytesToUnit from '../../util/bytesToUnit';
 
-const FileEleDownloadBtn = ({ size, dlPath, main }) => {
+const baseUrl = 'http://localhost:4000/share/download?fileName=';
+
+const FileEleDownloadBtn = ({ size, fileName, main }) => {
 	const renderInner = () => {
 		if (main) {
 			return <h5>Download</h5>;
@@ -18,7 +20,13 @@ const FileEleDownloadBtn = ({ size, dlPath, main }) => {
 	};
 
 	return (
-		<StyledBtn id={main ? 'main-btn' : null} title="Donwload">
+		<StyledBtn
+			id={main ? 'main-btn' : null}
+			title="Donwload"
+			href={`${baseUrl}${fileName}`}
+			download={fileName}
+			role="button"
+		>
 			{renderInner()}
 		</StyledBtn>
 	);
@@ -26,7 +34,7 @@ const FileEleDownloadBtn = ({ size, dlPath, main }) => {
 
 export default FileEleDownloadBtn;
 
-const StyledBtn = styled.button`
+const StyledBtn = styled.a`
 	min-width: 100px;
 	min-height: 50px;
 	border-radius: 4px;
@@ -42,8 +50,8 @@ const StyledBtn = styled.button`
 	margin-left: 1rem;
 
 	@media screen and (max-width: 600px) {
-		max-width: 50px;
-		min-width: 50px;
+		max-width: 30px;
+		min-width: 30px;
 	}
 
 	svg {
@@ -63,7 +71,11 @@ const StyledBtn = styled.button`
 	}
 
 	span {
-		stroke: #424242;
+		color: #424242;
+
+		&:focus {
+			color: #424242;
+		}
 
 		@media screen and (max-width: 600px) {
 			display: none;

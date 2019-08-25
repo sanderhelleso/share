@@ -2,14 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import FileEleDownloadBtn from './FileEleDownloadBtn';
 
-const FileEle = ({ name, size, type, dlPath }) => {
+const FileEle = ({ name, size, type, shareCode }) => {
 	return (
 		<StyledDiv>
 			<div>
 				<h5>{name.length > 50 ? `${name.substring(0, 50)}...` : name}</h5>
 				<p>{type}</p>
 			</div>
-			<FileEleDownloadBtn size={size} dlPath={dlPath} />
+			<FileEleDownloadBtn size={size} fileName={`${shareCode}/${name}`} />
 		</StyledDiv>
 	);
 };
