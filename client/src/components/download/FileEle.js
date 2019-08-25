@@ -6,7 +6,7 @@ const FileEle = ({ name, size, type, dlPath }) => {
 	return (
 		<StyledDiv>
 			<div>
-				<h5>{name}</h5>
+				<h5>{name.length > 50 ? `${name.substring(0, 50)}...` : name}</h5>
 				<p>{type}</p>
 			</div>
 			<FileEleDownloadBtn size={size} dlPath={dlPath} />
@@ -33,6 +33,7 @@ const StyledDiv = styled.div`
 		color: #ffffff;
 		font-family: 'Comfortaa', cursive;
 		font-size: 1rem;
+		word-break: break-all;
 	}
 
 	p {

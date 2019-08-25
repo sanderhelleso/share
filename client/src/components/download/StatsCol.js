@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const StatsCol = ({ highlight, subtext }) => (
-	<StyledDiv>
+const StatsCol = ({ highlight, subtext, withBorder }) => (
+	<StyledDiv withBorder={withBorder}>
 		<h3>{highlight}</h3>
 		<p>{subtext}</p>
 	</StyledDiv>
@@ -11,17 +11,16 @@ const StatsCol = ({ highlight, subtext }) => (
 export default StatsCol;
 
 const StyledDiv = styled.div`
-	max-height: 200px;
-	min-height: 200px;
-	margin-bottom: 3rem;
+	max-height: 150px;
+	min-height: 150px;
+	padding: 1.5rem 0;
 	min-width: 100%;
-	background-color: #ffffff;
 	border-radius: 4px;
-	box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.1);
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+	border-bottom: ${({ withBorder }) => (withBorder ? '1px solid #eeeeee' : 'none')};
 
 	h3 {
 		font-weight: 800;

@@ -5,7 +5,7 @@ import bytesToUnit from '../../util/bytesToUnit';
 
 const FileEleDownloadBtn = ({ size, dlPath }) => {
 	return (
-		<StyledBtn>
+		<StyledBtn title="Donwload File">
 			<span>{bytesToUnit(size)}</span>
 			<Download />
 		</StyledBtn>
@@ -33,6 +33,9 @@ const StyledBtn = styled.button`
 		height: 1.25rem;
 		width: 1.25rem;
 		margin-left: 1rem;
+		border-left: 0.25px solid rgba(0, 0, 0, 0.975);
+		padding-left: 1rem;
+		min-height: 30px;
 	}
 
 	span {

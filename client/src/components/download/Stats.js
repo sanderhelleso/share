@@ -21,7 +21,7 @@ const Stats = ({ stats }) => {
 
 	const renderCols = () => {
 		return cols.map((col, i) => {
-			return <StatsCol key={i} {...col} />;
+			return <StatsCol key={i} {...col} withBorder={i !== cols.length - 1} />;
 		});
 	};
 
@@ -36,4 +36,11 @@ const StyledAside = styled.aside`
 	position: sticky;
 	top: 3rem;
 	max-height: 600px;
+	background-color: #ffffff;
+	box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.1);
+	border-radius: 6px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
 `;
