@@ -11,12 +11,15 @@
 <a href="https://github.com/sanderhelleso">
 <img src="https://github.com/sanderhelleso/share/blob/master/client/public/img/preview.gif" alt="preview">
 </a>
+</p>
 
 <br>
 <br>
 
 ## ❯ Download Files
-<img src="https://github.com/sanderhelleso/share/blob/master/client/public/img/demo3.jpg" alt="preview">
+<p align="center">
+<img src="https://github.com/sanderhelleso/share/blob/master/client/public/img/demo3.jpg" alt="preview" height="600" width="600">
+</p>
 
 <br>
 <br>
