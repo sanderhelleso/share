@@ -27,7 +27,7 @@ const Upload = ({ setLoading, setShareCode }) => {
 		const shareCode = await response.text();
 
 		const timeTaken = new Date().getTime() - t;
-		setTimeout(() => setShareCode(shareCode), timeTaken < 1000 ? 1000 : 0);
+		setTimeout(() => setShareCode(shareCode), timeTaken < 1000 ? 1000 - timeTaken : 0);
 	};
 
 	const handleChange = () => {

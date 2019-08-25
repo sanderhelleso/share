@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { fadeInPure } from '../../util/keyframes';
 import ShareUrl from './ShareUrl';
-import ResetBtn from './ResetBtn';
 import copyToClip from '../../util/copyToClip';
+import ActionBtn from '../../util/ActionBtn';
+
+import { X } from 'react-feather';
 
 const baseUrl = 'http://localhost:3000/download/';
 const canCopy = navigator.clipboard;
@@ -22,7 +24,7 @@ const Result = ({ shareCode, reset }) => {
 
 	return (
 		<StyledDiv>
-			<ResetBtn reset={reset} />
+			<ActionBtn onClick={reset} title="reset" icon={<X />} />
 			<p className="share">
 				Share the link below with anyone you want to be able to see and download your files!
 			</p>

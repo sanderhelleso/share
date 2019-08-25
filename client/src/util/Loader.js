@@ -24,5 +24,6 @@ export const LoaderCont = styled.main`
 	p {
 		opacity: 0.7;
 		margin-top: 4rem;
+		color: #ffffff;
 	}
 `;

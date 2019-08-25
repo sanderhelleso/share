@@ -1,20 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import { X } from 'react-feather';
-import { fadeIn } from '../../util/keyframes';
+import { fadeIn } from './keyframes';
 
-const ResetBtn = ({ reset }) => (
-	<StyledDiv className="no-select" onClick={reset} title="Reset">
-		<X />
+const ActionBtn = ({ onClick, title, icon }) => (
+	<StyledDiv className="no-select" onClick={onClick} title={title}>
+		{icon}
 	</StyledDiv>
 );
 
-export default ResetBtn;
+export default ActionBtn;
 
 const StyledDiv = styled.div`
 	animation: ${fadeIn} 0.4s ease forwards;
-	min-width: 70px;
-	min-height: 70px;
+	min-width: 60px;
+	min-height: 60px;
 	border-radius: 50%;
 	background-color: #7e6bc4;
 	display: flex;
