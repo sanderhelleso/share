@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { Download } from 'react-feather';
 import bytesToUnit from '../../util/bytesToUnit';
 
-const FileEleDownloadBtn = ({ size, dlPath }) => {
+const FileEleDownloadBtn = ({ size, dlPath, main }) => {
+	const renderInner = () => {
+		if (main) {
+			return <h5>Download</h5>;
+		}
+
+		return (
+			<Fragment>
+				<span>{bytesToUnit(size)}</span>
+				<Download />
+			</Fragment>
+		);
+	};
+
 	return (
-		<StyledBtn title="Donwload File">
-			<span>{bytesToUnit(size)}</span>
-			<Download />
+		<StyledBtn id={main ? 'main-btn' : null} title="Donwload">
+			{renderInner()}
 		</StyledBtn>
 	);
 };
@@ -40,5 +52,27 @@ const StyledBtn = styled.button`
 
 	span {
 		stroke: #424242;
+	}
+
+	&#main-btn {
+		border-radius: 8px;
+		margin-top: -3rem;
+		min-width: 220px;
+		min-height: 65px;
+		flex-direction: column;
+		background: #f2994a; /* fallback for old browsers */
+		background: -webkit-linear-gradient(to right, #f2c94c, #f2994a); /* Chrome 10-25, Safari 5.1-6 */
+		background: linear-gradient(
+			to right,
+			#f2c94c,
+			#f2994a
+		); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+		h5 {
+			margin: 0;
+			text-transform: uppercase;
+			font-size: 1.45rem;
+			letter-spacing: 2px;
+		}
 	}
 `;
