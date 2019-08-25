@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - ShareApplication",
+            "request": "launch",
+            "mainClass": "com.semanta.share.ShareApplication",
+            "projectName": "share"
+        }
+    ]
+}
