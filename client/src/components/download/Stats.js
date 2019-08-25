@@ -30,4 +30,10 @@ const Stats = ({ stats }) => {
 
 export default Stats;
 
-const StyledAside = styled.aside`max-width: 300px;`;
+const StyledAside = styled.aside`
+	max-width: 300px;
+	position: -webkit-sticky; /* Safari */
+	position: sticky;
+	top: 3rem;
+	max-height: 600px;
+`;
