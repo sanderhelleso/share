@@ -13,10 +13,6 @@
 </a>
 </p>
 
-<br>
-<br>
-
-## ❯ Download Files
 <p align="center">
 <img src="https://github.com/sanderhelleso/share/blob/master/client/public/img/demo3.jpg" alt="preview" height="600" width="600">
 </p>
