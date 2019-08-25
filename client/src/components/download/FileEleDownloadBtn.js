@@ -56,7 +56,8 @@ const StyledBtn = styled.button`
 
 	&#main-btn {
 		border-radius: 8px;
-		margin-top: -3rem;
+		position: absolute;
+		top: -2rem;
 		min-width: 220px;
 		min-height: 65px;
 		flex-direction: column;

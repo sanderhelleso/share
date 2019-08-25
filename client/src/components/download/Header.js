@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Header = ({ sharedFrom, expiresAt }) => {
+const Header = ({ numFiles, sharedFrom, expiresAt }) => {
 	return (
 		<StyledHeader>
-			<h2>From {sharedFrom}</h2>
+			<h2>
+				{numFiles} file{numFiles === 1 ? '' : 's'} from {sharedFrom}
+			</h2>
 			<p>Expires {new Date(expiresAt).toUTCString()}</p>
 		</StyledHeader>
 	);

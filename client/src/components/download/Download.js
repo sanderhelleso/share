@@ -41,7 +41,7 @@ const Download = ({ history, match: { params: { shareCode } } }) => {
 			<Fragment>
 				<ActionBtn onClick={() => history.push('/')} title="reset" icon={<ArrowLeft />} />
 				<StyledDiv>
-					<Header shareCode={shareCode} expiresAt={expiresAt} sharedFrom={sharedFromCountry} />
+					<Header numFiles={files.length} expiresAt={expiresAt} sharedFrom={sharedFromCountry} />
 					<StyledGrid>
 						<FilesList files={files} />
 						<Stats stats={stats} />
