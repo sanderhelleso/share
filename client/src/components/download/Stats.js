@@ -12,7 +12,7 @@ const Stats = ({ stats, shareCode }) => {
 		},
 		{
 			highlight: stats.totalDownloads,
-			subtext: 'Downloads'
+			subtext: 'Views'
 		}
 	];
 
