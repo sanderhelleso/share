@@ -4,7 +4,7 @@ import StatsCol from './StatsCol';
 import bytesToUnit from '../../util/bytesToUnit';
 import FileEleDownloadBtn from './FileEleDownloadBtn';
 
-const Stats = ({ stats }) => {
+const Stats = ({ stats, shareCode }) => {
 	const cols = [
 		{
 			highlight: bytesToUnit(stats.totalSize),
@@ -12,7 +12,7 @@ const Stats = ({ stats }) => {
 		},
 		{
 			highlight: stats.totalDownloads,
-			subtext: 'Downloads'
+			subtext: 'Views'
 		}
 	];
 
@@ -24,7 +24,7 @@ const Stats = ({ stats }) => {
 
 	return (
 		<StyledAside>
-			<FileEleDownloadBtn main={true} expiresAt={new Date(stats.expiresAt).toUTCString()} />
+			<FileEleDownloadBtn main={true} expiresAt={new Date(stats.expiresAt).toUTCString()} fileName={shareCode} />
 			{renderCols()}
 		</StyledAside>
 	);
