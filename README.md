@@ -13,6 +13,13 @@
 </a>
 
 <br>
+<br>
+
+## ❯ Download Files
+<img src="https://github.com/sanderhelleso/share/blob/master/client/public/img/demo3.jpg" alt="preview">
+
+<br>
+<br>
 
 ## ❯ Getting Started
 
