@@ -1,7 +1,6 @@
 package com.semanta.share.service.share;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +35,7 @@ public class ShareServiceImpl implements ShareService {
     private ShareInfoRepository shareInfoRepo;
 
     @Override
-    public String upload(MultipartFile[] files, long timeout, HttpServletRequest request) {
+    public String upload(MultipartFile[] files, HttpServletRequest request) {
 
         // ensure storage has room for new upload
         if (!FileSystem.canUpload(files)) {
@@ -49,8 +48,8 @@ public class ShareServiceImpl implements ShareService {
             String country = LookupIP.lookup(request.getRemoteAddr());
 
             FileSystem.uploadFiles(files, dirID);
-            new DelDirTask(timeout, FileSystem.concatDirs(dirID));
-            this.saveShareInfo(dirID, timeout, country);
+            new DelDirTask(FileSystem.concatDirs(dirID));
+            this.saveShareInfo(dirID, country);
 
             return dirID;
         } catch (Exception e) {
@@ -111,11 +110,8 @@ public class ShareServiceImpl implements ShareService {
         return shareInfoRepo.findAll();
     }
 
-    private void saveShareInfo(String dirID, Long timeout, String country) {
-        Date now = new Date();
-        Date expiresAt = new Date(now.getTime() + timeout);
-
-        ShareInfo shareInfo = new ShareInfo(dirID, expiresAt, country);
+    private void saveShareInfo(String dirID, String country) {
+        ShareInfo shareInfo = new ShareInfo(dirID, country);
         shareInfoRepo.save(shareInfo);
     }
 

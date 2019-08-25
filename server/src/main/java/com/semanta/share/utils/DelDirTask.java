@@ -14,22 +14,18 @@ import java.io.File;
  */
 
 public class DelDirTask extends TimerTask {
-    private long MAX_TIMEOUT = 3600000 * 3; // 3 hrs
+    private long ONE_HOUR = 3600000;
     private Timer timer;
     private File dir;
 
     @Autowired
     private ShareInfoRepository shareInfoRepo;
 
-    public DelDirTask(long timeout, String dirPath) {
+    public DelDirTask(String dirPath) {
         this.dir = new File(dirPath);
         this.timer = new Timer();
 
-        if (timeout > MAX_TIMEOUT) {
-            timeout = MAX_TIMEOUT;
-        }
-
-        this.timer.schedule(this, timeout);
+        this.timer.schedule(this, ONE_HOUR);
     }
 
     @Override

@@ -19,7 +19,7 @@ const Upload = ({ setLoading, setShareCode }) => {
 		const t = new Date().getTime();
 
 		const response = await _fetch(
-			'http://localhost:4000/share/upload?timeout=55155000',
+			'http://localhost:4000/share/upload',
 			'PUT',
 			makeFileForm(files)
 		);

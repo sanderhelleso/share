@@ -48,8 +48,7 @@ public class ShareController {
     }
 
     @PutMapping("/upload")
-    public String upload(@RequestParam MultipartFile[] files, int timeout, HttpServletRequest request)
-            throws Exception {
-        return shareService.upload(files, timeout, request);
+    public String upload(@RequestParam MultipartFile[] files, HttpServletRequest request) throws Exception {
+        return shareService.upload(files, request);
     }
 }
