@@ -39,10 +39,33 @@ const Home = () => {
 export default Home;
 
 const StyledHome = styled.main`
+	max-width: 75%;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin: 0 auto;
+
+	@media screen and (max-width: 700px) {
+		max-width: 80%;
+	}
+
 	h1 {
 		color: #ffbd39;
 		font-size: 3.5rem;
 		letter-spacing: 4px;
+
+		@media screen and (max-width: 700px) {
+			font-size: 2.5rem;
+		}
+	}
+
+	p {
+		margin-bottom: 0.3rem;
+		@media screen and (max-width: 700px) {
+			font-size: 0.8rem;
+		}
 	}
 
 	p,
@@ -55,14 +78,6 @@ const StyledHome = styled.main`
 		margin-top: 1rem;
 		opacity: 0.7;
 	}
-
-	max-width: 75%;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	margin: 0 auto;
 `;
 
 const StyledDiv = styled.div`

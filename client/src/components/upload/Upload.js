@@ -107,6 +107,11 @@ const StyledInput = styled.div`
 	position: relative;
 	box-shadow: 0px 7.5px 15px rgba(0, 0, 0, 0.1);
 
+	@media screen and (max-width: 700px) {
+		min-width: 90%;
+		max-width: 90%;
+	}
+
 	h5 {
 		margin: 0;
 		color: #d6c8ff;
