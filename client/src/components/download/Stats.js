@@ -33,10 +33,11 @@ const Stats = ({ stats }) => {
 export default Stats;
 
 const StyledAside = styled.aside`
-	max-width: 300px;
 	position: -webkit-sticky; /* Safari */
 	position: sticky;
 	top: 5rem;
+	max-width: 300px;
+	min-width: 300px;
 	max-height: 450px;
 	min-height: 450px;
 	background-color: #ffffff;
@@ -46,4 +47,23 @@ const StyledAside = styled.aside`
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+	margin: 0 auto;
+
+	@media screen and (max-width: 1350px) {
+		position: -webkit-fixed; /* Safari */
+		position: fixed;
+		top: calc(100% - 100px);
+		left: 50%;
+		transform: translate(-50%);
+		max-width: 100%;
+		min-width: 100%;
+		max-height: 100px;
+		min-height: 100px;
+		flex-direction: row;
+		border-radius: 0;
+		box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.3);
+	}
+
+	@media screen and (max-width: 800px) {
+	}
 `;

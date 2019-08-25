@@ -39,6 +39,12 @@ const StyledBtn = styled.button`
 	outline: none;
 	box-shadow: 0px 7.5px 15px rgba(0, 0, 0, 0.1);
 	padding: 0 1rem;
+	margin-left: 1rem;
+
+	@media screen and (max-width: 600px) {
+		max-width: 50px;
+		min-width: 50px;
+	}
 
 	svg {
 		stroke: #424242;
@@ -48,16 +54,27 @@ const StyledBtn = styled.button`
 		border-left: 0.25px solid rgba(0, 0, 0, 0.975);
 		padding-left: 1rem;
 		min-height: 30px;
+
+		@media screen and (max-width: 600px) {
+			border-left: none;
+			padding: 0;
+			margin: 0;
+		}
 	}
 
 	span {
 		stroke: #424242;
+
+		@media screen and (max-width: 600px) {
+			display: none;
+		}
 	}
 
 	&#main-btn {
 		border-radius: 8px;
 		position: absolute;
 		top: -2rem;
+		margin-left: 0;
 		min-width: 220px;
 		min-height: 65px;
 		flex-direction: column;
@@ -74,6 +91,23 @@ const StyledBtn = styled.button`
 			text-transform: uppercase;
 			font-size: 1.45rem;
 			letter-spacing: 2px;
+		}
+
+		@media screen and (max-width: 1350px) {
+			position: relative;
+			min-width: 200px;
+			min-height: 55px;
+			margin: 0 50px;
+			margin-top: 4rem;
+
+			h5 {
+				font-size: 1.25rem;
+			}
+		}
+
+		@media screen and (max-width: 700px) {
+			min-width: 80%;
+			max-width: 80%;
 		}
 	}
 `;

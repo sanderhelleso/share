@@ -22,6 +22,29 @@ const StyledDiv = styled.div`
 	flex-direction: column;
 	border-bottom: ${({ withBorder }) => (withBorder ? '1px solid #eeeeee' : 'none')};
 
+	@media screen and (max-width: 1350px) {
+		border-bottom: 0;
+		border-left: 1px solid #eeeeee;
+		max-height: 40px;
+		min-height: 40px;
+		min-width: 200px;
+		max-width: 200px;
+		float: right;
+
+		h3 {
+			font-size: 1.3rem !important;
+			margin-bottom: 0.2rem;
+		}
+
+		p {
+			font-size: 12px;
+		}
+	}
+
+	@media screen and (max-width: 700px) {
+		display: none;
+	}
+
 	h3 {
 		font-weight: 800;
 		letter-spacing: 3px;

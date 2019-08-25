@@ -28,4 +28,11 @@ const StyledDiv = styled.div`
 	svg {
 		stroke: #d6c8ff;
 	}
+
+	@media screen and (max-width: 1350px) {
+		min-width: 50px;
+		min-height: 50px;
+		top: 1.5rem;
+		left: 1.5rem;
+	}
 `;

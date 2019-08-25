@@ -73,14 +73,14 @@ const Download = ({ history, match: { params: { shareCode } } }) => {
 export default withRouter(Download);
 
 const StyledDiv = styled.div`
-	padding-top: 8rem;
-	min-height: calc(90vh - 8rem);
-	max-width: 1200px;
+	padding-top: 10rem;
+	min-height: calc(90vh - 10rem);
+	max-width: 1100px;
 	margin: 0 auto;
 	animation: ${fadeInPure} 0.8s ease forwards;
 
-	@media screen and (max-width: 1400px) {
-		max-width: 1000px;
+	@media screen and (max-width: 1350px) {
+		max-width: 85%;
 	}
 `;
 
@@ -88,6 +88,10 @@ const StyledGrid = styled.div`
 	display: grid;
 	grid-template-columns: 2fr 1fr;
 	grid-column-gap: 3rem;
+
+	@media screen and (max-width: 1350px) {
+		grid-template-columns: 1fr;
+	}
 `;
 
 const StyledLoaderCont = styled.div`

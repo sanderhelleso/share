@@ -28,6 +28,21 @@ const StyledDiv = styled.div`
 	padding: 0 2rem;
 	box-shadow: 0px 7.5px 15px rgba(0, 0, 0, 0.1);
 
+	@media screen and (max-width: 1350px) {
+		min-width: calc(100% - 4rem);
+		padding: 0 1.5rem;
+	}
+
+	@media screen and (max-width: 600px) {
+		h5 {
+			font-size: 0.85rem !important;
+		}
+
+		p {
+			font-size: 10px !important;
+		}
+	}
+
 	h5 {
 		margin: 0;
 		color: #ffffff;

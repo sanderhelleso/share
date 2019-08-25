@@ -14,4 +14,10 @@ const FilesList = ({ files }) => {
 
 export default FilesList;
 
-const StyledMain = styled.main`max-width: 700px;`;
+const StyledMain = styled.main`
+	max-width: 700px;
+
+	@media screen and (max-width: 1350px) {
+		max-width: 100%;
+	}
+`;
