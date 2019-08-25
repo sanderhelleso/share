@@ -63,7 +63,4 @@ const StyledAside = styled.aside`
 		border-radius: 0;
 		box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.3);
 	}
-
-	@media screen and (max-width: 800px) {
-	}
 `;
